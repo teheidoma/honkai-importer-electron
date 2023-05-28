@@ -5,6 +5,10 @@ import { Injectable } from '@angular/core';
 import { ipcRenderer, webFrame } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
+import * as regedit from 'regedit';
+import * as axios from 'axios';
+import * as formdata from 'form-data';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +18,8 @@ export class ElectronService {
   webFrame!: typeof webFrame;
   childProcess!: typeof childProcess;
   fs!: typeof fs;
-
+  regedit!: typeof regedit;
+  formData!: typeof formdata;
   constructor() {
     // Conditional imports
     if (this.isElectron) {
@@ -24,6 +29,8 @@ export class ElectronService {
       this.fs = window.require('fs');
 
       this.childProcess = window.require('child_process');
+      this.regedit = window.require('regedit');
+      this.formData = window.require('form-data');
       this.childProcess.exec('node -v', (error, stdout, stderr) => {
         if (error) {
           console.error(`error: ${error.message}`);

@@ -1,0 +1,50 @@
+<div class="w-full flex flex-col items-start">
+  <div>
+    <h1 class="text-white font-main">Wishes</h1>
+    <button>auto import</button>
+  </div>
+  <p class="font-main text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur dolor illo
+    in maiores molestiae numquam </p>
+
+  <div class="wish-container flex gap-2 w-full">
+    <div class="flex flex-col justify-between gap-2 h-full">
+      <div class="wish-block flex flex-col justify-between p-3">
+        <div class="bg-primary rounded-md h-14 flex justify-between items-center text-white font-main p-3">
+          <div class="flex flex-col">
+            <div>Lifetime pulls</div>
+            <div class="text-secondary">{{pulls.length * 160}}</div>
+          </div>
+          <div>{{pulls.length}}</div>
+        </div>
+        <div class="bg-primary rounded-md h-14 flex justify-between items-center text-white font-main p-3">
+          <div class="flex flex-col">
+            <div>Lifetime pulls</div>
+            <div class="text-secondary">123 512</div>
+          </div>
+          <div>492</div>
+        </div>
+        <div class="bg-primary rounded-md h-14 flex justify-between items-center text-white font-main p-3">
+          <div class="flex flex-col">
+            <div>Lifetime pulls</div>
+            <div class="text-secondary">123 512</div>
+          </div>
+          <div>492</div>
+        </div>
+      </div>
+      <div class="wish-block pl-2 pr-2 pt-4 pb-4 flex items-start gap-2 font-regular flex-wrap content-start">
+        <ng-container *ngFor="let pull of this.pulls; index as i">
+          <span class="border border-amber-500 border-2 rounded-full pl-2 pr-2 text-white" *ngIf="pull.rank_type == 5">
+            {{pull.name}}
+            <span class="text-red-500 font-bold" [style.color]="redGradiate(lastPityFrom(pull.rank_type, i))">{{lastPityFrom(pull.rank_type, i)}}</span>
+          </span>
+        </ng-container>
+      </div>
+      <div class="wish-block">
+        <div id="chart"></div>
+      </div>
+    </div>
+    <div class="wish-table p-2">
+      <app-wish-table [pulls]="pulls"></app-wish-table>
+    </div>
+  </div>
+</div>

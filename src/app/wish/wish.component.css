@@ -1,0 +1,33 @@
+/*.banner-button {*/
+/*  @apply text-white text-xl bg-black rounded-3xl pl-5 pr-5 pt-2 pb-2 border-amber-300 border-2 border-opacity-30*/
+/*  hover:text-amber-300 hover:border-opacity-75 transition-colors font-light;*/
+/*}*/
+
+h1 {
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 49px;
+}
+
+.wish-block {
+  @apply w-80 h-80 bg-secondary rounded-3xl;
+}
+
+.wish-table {
+  @apply w-full bg-secondary rounded-3xl;
+  overflow: auto;
+}
+
+.wish-row:nth-child(even) {
+  background: #3a3c44
+}
+
+.wish-row:nth-child(odd) {
+  background: #38393D
+}
+
+/*tr:nth-child(even) {background: #CCC}*/
+/*tr:nth-child(odd) {background: #FFF}*/
+.wish-container {
+  height: 50rem;
+}

@@ -1,0 +1,22 @@
+.box-shadow {
+  box-shadow: -4px 0px 40px rgba(0, 0, 0, 0.3);
+}
+.menu-circle {
+  width: 75px;
+  height: 75px;
+  -webkit-app-region: none;
+}
+.menu-square {
+  width: 75px;
+  height: 45px;
+  border-radius: 10px;
+  -webkit-app-region: none;
+}
+.menu {
+  gap: 50px;
+  padding: 10px;
+  -webkit-app-region: drag
+}
+.active {
+  background-color: #3DBDA7;
+}

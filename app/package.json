@@ -9,5 +9,8 @@
   "main": "main.js",
   "private": true,
   "dependencies": {
+    "regedit": "^5.1.2",
+    "@types/axios": "0.14.0",
+    "axios": "^1.4.0"
   }
 }

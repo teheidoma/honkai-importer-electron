@@ -1,0 +1,16 @@
+<table class="table-auto w-full ">
+  <tr>
+    <th>Time</th>
+    <th>pity</th>
+    <th>name</th>
+    <th>rarity</th>
+  </tr>
+  <tr class="wish-row h-10 font-regular text-gray-300 border-t border-b border-gray-500"
+      [class.star4]="pull.rank_type == 4" [class.star5]="pull.rank_type == 5"
+      *ngFor="let pull of this.pulls; index as i">
+    <td class="pl-5 ">{{pull.time}}</td>
+    <td>{{pull.rank_type > 3 ? lastPityFrom(pull.rank_type, i) : ''}}</td>
+    <td>{{pull.name}}</td>
+    <td>{{pull.rank_type}}</td>
+  </tr>
+</table>

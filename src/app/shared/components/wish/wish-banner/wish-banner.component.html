@@ -1,0 +1,18 @@
+<div class="w-full text-white bg-black border rounded-2xl font-regular">
+  <h2 class="text-center p-2 text-lg">{{title}}</h2>
+  <div class="p-5 pt-2">
+    <app-wish-label [title]="'Lifetime Pulls'" [subtitle]="(pulls.length*160).toString()" [number]="pulls.length.toString()"></app-wish-label>
+    <app-wish-label [title]="'5 Pity'" [subtitle]="'Guaranteed at 90'" [number]="lastPity(5).toString()"></app-wish-label>
+    <app-wish-label [title]="'4 Pity'" [subtitle]="'Guaranteed at 90'" [number]="lastPity(4).toString()"></app-wish-label>
+  </div>
+  <button class="w-full" (click)="toggleContent(content)">Collapse</button>
+  <div #content class="content text-white hidden transition p-5">
+    <table class="w-full">
+      <tr *ngFor="let pull of pulls; index as i" class="w-full text-sm text-pur border-t border-b border-opacity-50 border-amber-300">
+        <td class="p-2" [class.text-purple-400]="pull.rank_type == 4" [class.text-amber-400]="pull.rank_type == 5">{{pull.name}}</td>
+        <td>{{pull.time}}</td>
+        <td *ngIf="pull.rank_type > 3">{{lastPityFrom(pull.rank_type, i)}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

@@ -1,9 +1,11 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { PageNotFoundComponent } from './shared/components';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
+import {PageNotFoundComponent} from './shared/components';
 
-import { HomeRoutingModule } from './home/home-routing.module';
-import { DetailRoutingModule } from './detail/detail-routing.module';
+import {HomeRoutingModule} from './home/home-routing.module';
+import {DetailRoutingModule} from './detail/detail-routing.module';
+import {WishComponent} from "./wish/wish.component";
+import {TimeComponent} from "./time/time.component";
 
 const routes: Routes = [
   {
@@ -11,6 +13,11 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {path: 'wish/standard', component: WishComponent, data: {gacha_type: 1}},
+  {path: 'wish/event', component: WishComponent, data: {gacha_type: 11}},
+  {path: 'wish/weapon', component: WishComponent, data: {gacha_type: 12}},
+  {path: 'wish/new', component: WishComponent, data: {gacha_type: 2}},
+  {path: 'time', component: TimeComponent},
   {
     path: '**',
     component: PageNotFoundComponent
@@ -25,4 +32,5 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

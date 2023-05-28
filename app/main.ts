@@ -1,10 +1,43 @@
-import {app, BrowserWindow, screen} from 'electron';
+import {app, BrowserWindow, ipcMain, screen} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import axios from "axios";
+import * as regedit from 'regedit';
+// import {APP_CONFIG} from "../src/environments/environment";
+import {exec} from "child_process";
+const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
+
+function upload(event: Electron.IpcMainEvent) {
+  console.log("importing data")
+  regedit.setExternalVBSLocation('resources/regedit/vbs')
+  regedit.list([registryKey], (err, keys) => {
+    if (err == null) {
+      let baseDir = keys[registryKey].values['InstallPath'].value;
+      let path = baseDir + '\\Games\\StarRail_Data\\webCaches\\Cache\\Cache_Data\\data_2'
+      fs.createReadStream(path).pipe(fs.createWriteStream("data.temp", {flags: 'a'}));
+      axios.post('http://teheidoma.com:8085' + '/parse', {
+        file: fs.createReadStream(path, {flags: 'r'})
+      }, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((response) => {
+        event.reply('upload-reply', response.data)
+      });
+    } else {
+      console.log(err)
+    }
+  });
+}
+
+function countOccurrences(str: string, value: string) {
+  const regExp = new RegExp(value, "gi");
+  return (str.match(regExp) || []).length;
+}
 
 function createWindow(): BrowserWindow {
 
@@ -34,7 +67,7 @@ function createWindow(): BrowserWindow {
     let pathIndex = './index.html';
 
     if (fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
-       // Path when running electron in local folder
+      // Path when running electron in local folder
       pathIndex = '../dist/index.html';
     }
 
@@ -49,6 +82,33 @@ function createWindow(): BrowserWindow {
     // when you should delete the corresponding element.
     win = null;
   });
+
+  ipcMain.on('upload', (event) => {
+    upload(event)
+  })
+  let count = 0, lastCount = 0, startedAt = new Date(0)
+  setInterval(() => {
+    exec('tasklist', (error, stdout, stderr) => {
+
+      count = countOccurrences(stdout, 'StarRail.exe')
+      if (count > lastCount) {
+        win.webContents.send('honkai-status', {
+          'event': 'started',
+        })
+        console.log(`started`)
+        startedAt = new Date()
+      } else if (count < lastCount) {
+        win.webContents.send('honkai-status', {
+          'event': 'stopped',
+          'from': startedAt.getTime(),
+          'to': new Date().getTime()
+        })
+        console.log(`stopped`)
+        startedAt = new Date(0)
+      }
+      lastCount = count
+    });
+  }, 5000)
 
   return win;
 }

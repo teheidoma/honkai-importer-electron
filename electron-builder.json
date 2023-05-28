@@ -34,5 +34,14 @@
     "target": [
       "AppImage"
     ]
-  }
+  },
+  "extraResources": [
+    {
+      "from": "node_modules/regedit/vbs",
+      "to": "regedit/vbs",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ]
 }

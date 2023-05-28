@@ -1,7 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "defaultCollection": "@angular-eslint/schematics"
+    "defaultCollection": "@angular-eslint/schematics",
+    "analytics": "3bdea0e8-845d-4b18-b155-d59d51130e00"
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -34,7 +35,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": [],
             "customWebpackConfig": {
@@ -145,7 +146,7 @@
             "inlineStyleLanguage": "scss",
             "scripts": [],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "assets": [
               "src/favicon.ico",
