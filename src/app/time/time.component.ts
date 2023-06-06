@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {TimeRange} from "../core/model/TimeRange";
+import {TimeRange} from "../core/model/timeRange";
 import {HonkaiService} from "../core/services/honkai.service";
 import 'anychart';
 import * as _ from 'lodash';

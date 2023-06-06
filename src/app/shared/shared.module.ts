@@ -11,10 +11,14 @@ import {RouterLink} from "@angular/router";
 import { WishBannerComponent } from './components/wish/wish-banner/wish-banner.component';
 import { WishLabelComponent } from './components/wish/wish-label/wish-label.component';
 import { WishTableComponent } from './components/wish/wish-table/wish-table.component';
+import { NavbarItemComponent } from './components/navbar-item/navbar-item.component';
+import { WishFeaturedComponent } from './components/wish/wish-featured/wish-featured.component';
+import { WishLastLegendaryComponent } from './components/wish/wish-last-legendary/wish-last-legendary.component';
+import { WishChartRarityComponent } from './components/wish/wish-chart-rarity/wish-chart-rarity.component';
 
 @NgModule({
-  declarations: [PageNotFoundComponent, WebviewDirective, NavbarComponent, WishBannerComponent, WishLabelComponent, WishTableComponent],
+  declarations: [PageNotFoundComponent, WebviewDirective, NavbarComponent, WishBannerComponent, WishLabelComponent, WishTableComponent, NavbarItemComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent],
   imports: [CommonModule, TranslateModule, FormsModule, RouterLink],
-    exports: [TranslateModule, WebviewDirective, FormsModule, NavbarComponent, WishTableComponent]
+    exports: [TranslateModule, WebviewDirective, FormsModule, NavbarComponent, WishTableComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent]
 })
 export class SharedModule {}

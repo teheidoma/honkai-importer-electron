@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Pull} from "../../../../core/model/Pull";
+import {Pull} from "../../../../core/model/pull";
 
 @Component({
   selector: 'app-wish-banner',

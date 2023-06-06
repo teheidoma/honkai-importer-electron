@@ -1,35 +1,75 @@
-import {app, BrowserWindow, ipcMain, screen} from 'electron';
+import {app, BrowserWindow, ipcMain, screen, dialog} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import axios from "axios";
 import * as regedit from 'regedit';
 // import {APP_CONFIG} from "../src/environments/environment";
 import {exec} from "child_process";
+
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
-function upload(event: Electron.IpcMainEvent) {
-  console.log("importing data")
+function get_file_by_registry(callback: (result: string | undefined) => void) {
   regedit.setExternalVBSLocation('resources/regedit/vbs')
   regedit.list([registryKey], (err, keys) => {
     if (err == null) {
       let baseDir = keys[registryKey].values['InstallPath'].value;
       let path = baseDir + '\\Games\\StarRail_Data\\webCaches\\Cache\\Cache_Data\\data_2'
-      fs.createReadStream(path).pipe(fs.createWriteStream("data.temp", {flags: 'a'}));
-      axios.post('http://teheidoma.com:8085' + '/parse', {
-        file: fs.createReadStream(path, {flags: 'r'})
-      }, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then((response) => {
-        event.reply('upload-reply', response.data)
-      });
+      if (fs.existsSync(path)) {
+        callback(path)
+      } else {
+        callback(undefined);
+      }
     } else {
-      console.log(err)
+      callback(undefined)
+    }
+  });
+}
+
+function get_file_by_dialog(): string | undefined {
+  let result = dialog.showOpenDialogSync({
+    properties: ['openDirectory', 'showHiddenFiles']
+  });
+  if (result != null && result.length == 1) {
+    return result[0]!
+  }
+}
+
+function start_upload(event: Electron.IpcMainEvent) {
+  console.log("importing data")
+  get_file_by_registry(path => {
+    if (!path) {
+      while (true) {
+        path = get_file_by_dialog()
+        if (!path) {
+          dialog.showErrorBox('error', "failed to locate honkai folder")
+        } else {
+          break
+        }
+      }
+    }
+    console.log("path is " + path)
+    upload(event, path)
+  });
+}
+
+function upload(event: Electron.IpcMainEvent, path: string) {
+  fs.createReadStream(path).pipe(fs.createWriteStream("data.temp", {flags: 'a'}));
+  axios.post('http://teheidoma.com:8085' + '/parse', {
+    file: fs.createReadStream(path, {flags: 'r'})
+  }, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }).then((response) => {
+    if (response.data.success) {
+      event.reply('upload-reply', response.data)
+    } else {
+      dialog.showErrorBox('error', 'please open wish history from game and try again')
+      upload(event, path)
     }
   });
 }
@@ -84,7 +124,7 @@ function createWindow(): BrowserWindow {
   });
 
   ipcMain.on('upload', (event) => {
-    upload(event)
+    start_upload(event)
   })
   let count = 0, lastCount = 0, startedAt = new Date(0)
   setInterval(() => {

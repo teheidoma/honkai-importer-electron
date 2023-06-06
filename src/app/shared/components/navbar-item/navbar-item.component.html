@@ -1,0 +1,15 @@
+<div class="flex w-full h-32 flex-row items-center shadow-l pt-2 pb-2 m-2 border-2 rounded-2xl border-secondary hover:border-slate-400 hover:shadow-xl transition">
+  <img class="h-full" src="assets/img/char/selee_full.webp" alt="">
+  <div class="flex flex-col items-start gap-0.5 p-2.5">
+    <h1 class="text-xl whitespace-nowrap">{{banners[0].typeName}}</h1>
+    <h2 class="text-l">{{banners[0].name}}</h2>
+    <div class="pt-2 pb-2">
+      <div class="flex gap-2" >
+        <span class="text-amber-400">{{countPullsByRank(5)}}</span>
+        <span class="text-purple-400">{{countPullsByRank(4)}}</span>
+        <span>{{countPullsByRank(3)}}</span>
+      </div>
+      <div>3/5 10% 10%</div>
+    </div>
+  </div>
+</div>

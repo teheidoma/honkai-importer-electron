@@ -1,18 +1,11 @@
-<aside class="menu bg-primary w-full h-screen flex flex-col justify-center items-center isolate box-shadow" >
-  <div class="hover:border-2 hover:transition hover:border-white menu-square bg-secondary flex justify-center items-center text-gray-300 font-regular" routerLink="wish/standard">
-    <span class="">standart</span>
-  </div>
-  <div class="hover:border-2 hover:transition hover:border-white menu-square bg-secondary flex justify-center items-center text-gray-300 font-regular" routerLink="wish/event">
-    <span class="">event</span>
-  </div>
-  <div class="hover:border-2 hover:transition hover:border-white menu-square bg-secondary flex justify-center items-center text-gray-300 font-regular" routerLink="wish/weapon">
-    <span class="">weapon</span>
-  </div>
-  <div class="hover:border-2 hover:transition hover:border-white menu-square bg-secondary flex justify-center items-center text-gray-300 font-regular" routerLink="wish/new">
-    <span class="">novichok</span>
-  </div>
-  <div class="hover:border-2 hover:transition hover:border-white menu-square bg-secondary flex justify-center items-center text-gray-300 font-regular" routerLink="time">
-    <span class="">time</span>
-  </div>
+<div class="w-full h-screen text-slate-200 font-mono flex flex-col justify-center">
+  <app-navbar-item routerLink="wish/standard" [pulls]="getPullForGachaType(1)"
+                   [banners]="getBannerForGachaType(1)"></app-navbar-item>
+  <app-navbar-item routerLink="wish/event" [pulls]="getPullForGachaType(11)"
+                   [banners]="getBannerForGachaType(11)"></app-navbar-item>
+  <app-navbar-item routerLink="wish/new" [pulls]="getPullForGachaType(2)"
+                   [banners]="getBannerForGachaType(2)"></app-navbar-item>
+<!--  <app-navbar-item routerLink="wish/new" [pulls]="getPullForGachaType(12)"-->
+<!--                   [banners]="getBannerForGachaType(12)"></app-navbar-item>-->
+</div>
 
-</aside>

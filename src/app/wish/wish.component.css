@@ -31,3 +31,14 @@ h1 {
 .wish-container {
   height: 50rem;
 }
+/*eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee*/
+/*.wish-grid {*/
+/*  grid-template-columns: repeat(3, 1fr);*/
+/*  grid-template-rows: repeat(2, 1fr);*/
+/*  grid-template-areas:*/
+/*    "main main main"*/
+/*    "a b c";*/
+/*}*/
+/*.chart-container {*/
+/*  height: 300px;*/
+/*}*/
