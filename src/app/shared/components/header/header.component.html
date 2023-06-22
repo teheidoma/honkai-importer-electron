@@ -1,0 +1,10 @@
+<header
+  class="h-24 bg-primary border-b border-slate-200 border-opacity-50 shadow-2xl fixed bg-primary w-full z-10 flex items-center justify-between">
+  logo
+  <div class="text-slate-200 flex flex-col font-mono">
+    <span>status: {{getStatus()}}</span>
+    <span>last updated: {{getLastUpdated()}}</span>
+    <button (click)="update()">update</button>
+    <span>{{updating}}</span>
+  </div>
+</header>

@@ -1,10 +1,14 @@
 import {app, BrowserWindow, ipcMain, screen, dialog} from 'electron';
+
+const {autoUpdater} = require('electron-updater');
+
 import * as path from 'path';
 import * as fs from 'fs';
 import axios from "axios";
 import * as regedit from 'regedit';
 // import {APP_CONFIG} from "../src/environments/environment";
 import {exec} from "child_process";
+
 
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
 
@@ -13,6 +17,8 @@ const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
 function get_file_by_registry(callback: (result: string | undefined) => void) {
+  // callback(undefined)//TODO
+  // return;
   regedit.setExternalVBSLocation('resources/regedit/vbs')
   regedit.list([registryKey], (err, keys) => {
     if (err == null) {
@@ -31,32 +37,36 @@ function get_file_by_registry(callback: (result: string | undefined) => void) {
 
 function get_file_by_dialog(): string | undefined {
   let result = dialog.showOpenDialogSync({
-    properties: ['openDirectory', 'showHiddenFiles']
+    properties: ['openFile', 'showHiddenFiles'],
+    filters: [{
+      name: 'launcher',
+      extensions: ['exe']
+    }]
   });
   if (result != null && result.length == 1) {
-    return result[0]!
+    return result[0]!.replace('\\launcher.exe', '')
   }
 }
 
-function start_upload(event: Electron.IpcMainEvent) {
+function start_upload(event: Electron.IpcMainEvent, path: string) {
   console.log("importing data")
-  get_file_by_registry(path => {
-    if (!path) {
-      while (true) {
-        path = get_file_by_dialog()
-        if (!path) {
-          dialog.showErrorBox('error', "failed to locate honkai folder")
-        } else {
-          break
-        }
-      }
-    }
-    console.log("path is " + path)
-    upload(event, path)
-  });
+  // get_file_by_registry(path => {
+  //   if (!path) {
+  //     while (true) {
+  //       path = get_file_by_dialog()
+  //       if (!path) {
+  //         dialog.showErrorBox('error', "failed to locate honkai folder")
+  //       } else {
+  //         break
+  //       }
+  //     }
+  //   }
+  console.log("path is " + path)
+  upload(event, path)
 }
 
 function upload(event: Electron.IpcMainEvent, path: string) {
+  path = path + '\\Games\\StarRail_Data\\webCaches\\Cache\\Cache_Data\\data_2'
   fs.createReadStream(path).pipe(fs.createWriteStream("data.temp", {flags: 'a'}));
   axios.post('http://teheidoma.com:8085' + '/parse', {
     file: fs.createReadStream(path, {flags: 'r'})
@@ -66,10 +76,11 @@ function upload(event: Electron.IpcMainEvent, path: string) {
     }
   }).then((response) => {
     if (response.data.success) {
-      event.reply('upload-reply', response.data)
+      event.reply('upload', {success: true, data: response.data})
+      return true
     } else {
-      dialog.showErrorBox('error', 'please open wish history from game and try again')
-      upload(event, path)
+      event.reply('upload', {success: false, data: response.data})
+      return false
     }
   });
 }
@@ -123,8 +134,29 @@ function createWindow(): BrowserWindow {
     win = null;
   });
 
-  ipcMain.on('upload', (event) => {
-    start_upload(event)
+  // win.once('ready-to-show', () => {
+  //   autoUpdater.checkForUpdatesAndNotify();
+  // });
+
+  ipcMain.on('upload', (event, args) => {
+    start_upload(event, args)
+  })
+  ipcMain.on('onboard', (event, args) => {
+    switch (args) {
+      case 'registry':
+        get_file_by_registry((result) => {
+          if (result) {
+            win.webContents.send('onboard', {success: true, path: result, type: 'registry'})
+          } else {
+            win.webContents.send('onboard', {success: false, type: 'registry'})
+          }
+        })
+        break
+      case 'dialog':
+        let path = get_file_by_dialog();
+        win.webContents.send('onboard', {success: path != null, path: path, type: 'dialog'})
+    }
+
   })
   let count = 0, lastCount = 0, startedAt = new Date(0)
   setInterval(() => {

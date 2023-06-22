@@ -3,6 +3,7 @@ import {ElectronService} from './core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {APP_CONFIG} from '../environments/environment';
 import {HonkaiService} from "./core/services/honkai.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -13,10 +14,13 @@ export class AppComponent {
   constructor(
     private electronService: ElectronService,
     private translate: TranslateService,
-    private honkaiService: HonkaiService
+    private honkaiService: HonkaiService,
+    private router: Router
   ) {
     this.translate.setDefaultLang('en');
-    console.log('APP_CONFIG', APP_CONFIG);
+
+
+    this.startOnBoardIfNeeded()
 
     if (electronService.isElectron) {
       console.log(process.env);
@@ -25,11 +29,26 @@ export class AppComponent {
       console.log('NodeJS childProcess', this.electronService.childProcess);
       console.log(electronService.regedit);
 
-      honkaiService.uploadFile().subscribe(response => {
-        console.log(response);
-      })
+      // honkaiService.uploadFile(false).subscribe(response => {
+      //   console.log(response);
+      // })
     } else {
       console.log('Run in browser');
+    }
+  }
+
+  startOnBoardIfNeeded() {
+    if(!localStorage.getItem('onboard')){
+      localStorage.setItem('onboard', 'true')
+      this.router.navigate(['/onboard'])
+    }
+  }
+
+  needSoloFocus(): boolean {
+    if (this.router.url == '/onboard') {
+      return true;
+    } else {
+      return false;
     }
   }
 }

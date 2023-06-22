@@ -17,12 +17,13 @@ import { DetailModule } from './detail/detail.module';
 import { AppComponent } from './app.component';
 import { WishComponent } from './wish/wish.component';
 import { TimeComponent } from './time/time.component';
+import { OnboardComponent } from './onboard/onboard.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
 @NgModule({
-  declarations: [AppComponent, WishComponent, TimeComponent],
+  declarations: [AppComponent, WishComponent, TimeComponent, OnboardComponent],
   imports: [
     BrowserModule,
     FormsModule,

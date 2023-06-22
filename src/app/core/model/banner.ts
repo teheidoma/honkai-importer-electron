@@ -1,6 +1,6 @@
 export interface Banner {
   id: number;
-  name: string;
+  name: string|null;
   type: number;
   typeName: string;
   legendary_id: number;

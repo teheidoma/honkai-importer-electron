@@ -20,7 +20,7 @@ export class Utils {
 
 
   public static redGradiate(pity: number) {
-    const hue = ((1 - pity / 100) * 120).toString(10);
+    const hue = ((1 - pity / 90) * 120).toString(10);
     return ["hsl(", hue, ",100%,50%)"].join("");
   }
 }

@@ -1,9 +1,14 @@
-<header class="h-24 bg-primary"></header>
-<div class="p-2 grid grid-cols-12 bg-primary">
-  <div class="col-start-1 col-end-3">
-    <app-navbar></app-navbar>
+<ng-container *ngIf="needSoloFocus()">
+  <router-outlet></router-outlet>
+</ng-container>
+<ng-container *ngIf="!needSoloFocus()">
+  <app-header></app-header>
+  <div class="p-2 grid grid-cols-12">
+    <div class="col-start-1 col-end-3 fixed">
+      <app-navbar></app-navbar>
+    </div>
+    <div class="col-start-3 p-5 pt-28" style="grid-column-end: 13;">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-  <div class="col-start-3 col-end-12 p-5">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+</ng-container>

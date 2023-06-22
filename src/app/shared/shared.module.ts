@@ -15,10 +15,12 @@ import { NavbarItemComponent } from './components/navbar-item/navbar-item.compon
 import { WishFeaturedComponent } from './components/wish/wish-featured/wish-featured.component';
 import { WishLastLegendaryComponent } from './components/wish/wish-last-legendary/wish-last-legendary.component';
 import { WishChartRarityComponent } from './components/wish/wish-chart-rarity/wish-chart-rarity.component';
+import { WishChartFreqComponent } from './components/wish/wish-chart-freq/wish-chart-freq.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
-  declarations: [PageNotFoundComponent, WebviewDirective, NavbarComponent, WishBannerComponent, WishLabelComponent, WishTableComponent, NavbarItemComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent],
+  declarations: [PageNotFoundComponent, WebviewDirective, NavbarComponent, WishBannerComponent, WishLabelComponent, WishTableComponent, NavbarItemComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent],
   imports: [CommonModule, TranslateModule, FormsModule, RouterLink],
-    exports: [TranslateModule, WebviewDirective, FormsModule, NavbarComponent, WishTableComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent]
+    exports: [TranslateModule, WebviewDirective, FormsModule, NavbarComponent, WishTableComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent]
 })
 export class SharedModule {}

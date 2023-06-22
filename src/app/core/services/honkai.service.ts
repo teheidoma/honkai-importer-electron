@@ -9,6 +9,8 @@ import {Pull} from "../model/pull";
 import {TimeRange} from "../model/timeRange";
 import {Banner} from "../model/banner";
 import {Banners} from "../../shared/banners";
+import {Assets} from "../../shared/assets";
+import {Asset} from "../model/asset";
 
 
 @Injectable({
@@ -16,6 +18,7 @@ import {Banners} from "../../shared/banners";
 })
 export class HonkaiService {
   public statusEvent: EventEmitter<any> = new EventEmitter()
+  public updatedEvent: EventEmitter<any> = new EventEmitter()
 
   constructor(private electronService: ElectronService,
               private httpClient: HttpClient) {
@@ -26,31 +29,38 @@ export class HonkaiService {
     }
   }
 
-  uploadFile(): Observable<string> {
+  uploadFile(path: string): Observable<any> {
     return new Observable<string>((subscriber) => {
-      this.electronService.ipcRenderer.send('upload')
-      this.electronService.ipcRenderer.on('upload-reply', (response, data) => {
-        subscriber.next(data)
-        if (data.success) {
-          localStorage.setItem('secret', data.secret)
-          localStorage.setItem('uid', data.uid)
+      this.electronService.ipcRenderer.send('upload', path)
+      this.electronService.ipcRenderer.on('upload', (response, result) => {
+        subscriber.next(result.data)
+        if (result.success && result.data.success) {
+          localStorage.setItem('secret', result.data.secret)
+          localStorage.setItem('uid', result.data.uid)
+          localStorage.setItem('updated_at', new Date().getTime().toString())
+        } else {
+          subscriber.error(result)
         }
         subscriber.complete()
+        this.updatedEvent.next('')
       })
     });
   }
 
-  getPulls(): Observable<Pull[]> {
-    return of(JSON.parse(localStorage.getItem('pulls')!))
-    // let secret = localStorage.getItem('secret');
-    // if (secret != null) {
-    //   return this.httpClient.get<Pull[]>(APP_CONFIG.apiUrl + '/pulls/all?secret=' + secret)
-    //     .pipe(tap(pulls => {
-    //       localStorage.setItem('pulls', JSON.stringify(pulls))
-    //     }))
-    // } else {
-    //   return EMPTY;
-    // }
+  getPulls(forceUpdate: boolean = false): Observable<Pull[]> {
+    let cached = localStorage.getItem('pulls');
+    if (cached) {
+      return of(JSON.parse(localStorage.getItem('pulls')!))
+    }
+    let secret = localStorage.getItem('secret');
+    if (secret != null) {
+      return this.httpClient.get<Pull[]>(APP_CONFIG.apiUrl + '/pulls/all?secret=' + secret)
+        .pipe(tap(pulls => {
+          localStorage.setItem('pulls', JSON.stringify(pulls))
+        }))
+    } else {
+      return EMPTY;
+    }
   }
 
   getTime(): Observable<TimeRange[]> {
@@ -61,8 +71,9 @@ export class HonkaiService {
       }))
   }
 
-  getImageUrlById(id: string) {
-    return 'https://pbs.twimg.com/media/Fxy5EFWWYAEF5gn?format=jpg&name=small'
+  getAssetById(id: number): Asset | undefined {
+    return Assets.assets.find(asset => asset.id == id)
+    // return 'https://pbs.twimg.com/media/Fxy5EFWWYAEF5gn?format=jpg&name=small'
   }
 
   getBannersByType(type: number): Banner[] {

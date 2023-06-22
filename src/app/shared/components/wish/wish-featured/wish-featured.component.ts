@@ -14,7 +14,12 @@ export class WishFeaturedComponent {
   constructor(private honkaiService: HonkaiService) {
   }
 
-  getSrc(assetId:string) {
-    return this.honkaiService.getImageUrlById(assetId)
+  getSrc(assetId:number) {
+    let asset = this.honkaiService.getAssetById(assetId);
+    if (asset){
+      return asset.img
+    } else {
+      return ''
+    }
   }
 }

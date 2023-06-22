@@ -18,13 +18,7 @@ h1 {
   overflow: auto;
 }
 
-.wish-row:nth-child(even) {
-  background: #3a3c44
-}
 
-.wish-row:nth-child(odd) {
-  background: #38393D
-}
 
 /*tr:nth-child(even) {background: #CCC}*/
 /*tr:nth-child(odd) {background: #FFF}*/

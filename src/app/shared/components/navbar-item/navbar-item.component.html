@@ -2,14 +2,19 @@
   <img class="h-full" src="assets/img/char/selee_full.webp" alt="">
   <div class="flex flex-col items-start gap-0.5 p-2.5">
     <h1 class="text-xl whitespace-nowrap">{{banners[0].typeName}}</h1>
-    <h2 class="text-l">{{banners[0].name}}</h2>
+    <h2 *ngIf="banners[0].name != null" class="text-l">{{banners[0].name}}</h2>
     <div class="pt-2 pb-2">
       <div class="flex gap-2" >
         <span class="text-amber-400">{{countPullsByRank(5)}}</span>
         <span class="text-purple-400">{{countPullsByRank(4)}}</span>
         <span>{{countPullsByRank(3)}}</span>
       </div>
-      <div>3/5 10% 10%</div>
+<!--      <div>3/5 10% 10%</div>-->
+      <div class="flex gap-2">
+        <span>{{countPullsByRank(5)}}/{{countPullsByRank(5)}}</span>
+        <span class="text-amber-400">{{getRankRatio(5)}}%</span>
+        <span class="text-purple-400">{{getRankRatio(4)}}%</span>
+      </div>
     </div>
   </div>
 </div>

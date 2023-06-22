@@ -110,11 +110,23 @@ export class WishComponent implements OnDestroy {
   //   chart.container("chart");
   //   chart.draw();
   // }
-  selectBanner(id: number) {
-    this.selectedBanner = this.banners.filter(b => b.id == id)[0];
+  selectBanner(id: number|null) {
+    if (id) {
+      this.selectedBanner = this.banners.filter(b => b.id == id)[0];
+    } else {
+      this.selectedBanner = undefined;
+    }
   }
 
   countPullsForBanner(banner: Banner) {
     return this.pulls.filter(pull => pull.gacha_id == banner.id).length
+  }
+
+  getSelectedBannerName() {
+    if (this.selectedBanner) {
+      return this.selectedBanner.name;
+    } else {
+      return "total"
+    }
   }
 }

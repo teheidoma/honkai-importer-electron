@@ -15,6 +15,10 @@ export class NavbarItemComponent {
 
 
   countPullsByRank(rank: number) {
-    return this.pulls.filter(pull=>pull.rank_type == rank).length
+    return this.pulls.filter(pull => pull.rank_type == rank).length
+  }
+
+  getRankRatio(rank: number) {
+    return (this.pulls.filter(pull => pull.rank_type == rank).length / this.pulls.length * 100).toFixed(1);
   }
 }

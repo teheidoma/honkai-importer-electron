@@ -1,11 +1,13 @@
-<table class="table-auto w-full ">
+<div class="h-96 p-10">
+<table class="table-auto w-full h-full overflow-y-scroll whitespace-nowrap">
   <tr>
     <th>Time</th>
     <th>pity</th>
     <th>name</th>
     <th>rarity</th>
   </tr>
-  <tr class="wish-row h-10 font-regular text-gray-300 border-t border-b border-gray-500"
+<!--  https://gridjs.io-->
+  <tr class="wish-row h-16 font-regular text-gray-300"
       [class.star4]="pull.rank_type == 4" [class.star5]="pull.rank_type == 5"
       *ngFor="let pull of this.pulls; index as i">
     <td class="pl-5 ">{{pull.time}}</td>
@@ -14,3 +16,4 @@
     <td>{{pull.rank_type}}</td>
   </tr>
 </table>
+</div>

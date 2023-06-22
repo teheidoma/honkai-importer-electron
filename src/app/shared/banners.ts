@@ -7,8 +7,8 @@ export class Banners {
       name: "Butterfly on Swordtip",
       typeName: 'Character event',
       type: 11,
-      legendary_id: 0,
-      rare_ids: []
+      legendary_id: 1683400200000276500,
+      rare_ids: [1683274200000301600]
     },
     {
       id: 2004,
@@ -19,18 +19,26 @@ export class Banners {
       rare_ids: []
     },
     {
-      id: 1,
-      name: 'standardt',
-      typeName: 'standardt',
+      id: 1001,
+      name: null,
+      typeName: 'Stellar Warp',
       type: 1,
       legendary_id: 0,
       rare_ids: []
     },
     {
-      id: 2,
-      name: 'standardt',
-      typeName: 'standardt',
+      id: 4001,
+      name: null,
+      typeName: 'Departure warp',
       type: 2,
+      legendary_id: 0,
+      rare_ids: []
+    },
+    {
+      id: 3003,
+      name: null,
+      typeName: 'Light cone warp',
+      type: 12,
       legendary_id: 0,
       rare_ids: []
     }

@@ -1,7 +1,7 @@
 <div class="h-full flex flex-col justify-center gap-2">
   <ng-container class="h-full" *ngFor="let pull of filteredPulls(); index as i">
     <div *ngIf="pull.rank_type == 5" class="font-regular font-bold text-amber-400 flex items-center gap-2">
-      <img class="w-10 h-10 rounded-full" src="https://pbs.twimg.com/media/Fxy5EFWWYAEF5gn?format=jpg&name=small"
+      <img class="w-10 h-10 rounded-full" src="{{getImg(pull)}}"
            alt="">
       {{pull.name}}
       <span [style.color]="redGradiate(getPityFrom(i))">{{getPityFrom(i)}}</span></div>

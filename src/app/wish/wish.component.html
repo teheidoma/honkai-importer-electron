@@ -1,15 +1,17 @@
 <div class="w-full flex flex-col items-center text-slate-300">
-  <h1>{{selectedBanner.name}}</h1>
+  <h1 class="font-regular pb-5">{{getSelectedBannerName()}}</h1>
   <div class="w-full flex flex-col items-center gap-2">
-    <div class="border bg-secondary rounded-lg p-1">total {{pulls.length}}</div>
+    <div class="border border-secondary font-mono rounded-lg p-2 hover:border-slate-400 hover:shadow-xl transition" (click)="selectBanner(null)">Total {{pulls.length}}</div>
     <div *ngIf="banners.length > 1" class="flex gap-2">
-      <div class="border bg-secondary rounded-lg p-1" (click)="selectBanner(banner.id)"
+      <div class="border border-secondary font-mono rounded-lg p-2 hover:border-slate-400 hover:shadow-xl transition" (click)="selectBanner(banner.id)"
            *ngFor="let banner of this.banners">{{banner.name}} {{countPullsForBanner(banner)}}</div>
     </div>
     <div class="w-full flex gap-40 p-2 justify-center items-center">
       <app-wish-featured [banner]="selectedBanner" class="w-32"></app-wish-featured>
-      <app-wish-chart-rarity class="w-72 h-full" [pulls]="pulls"></app-wish-chart-rarity>
+      <app-wish-chart-rarity [banner]="selectedBanner" class="w-72 h-full" [pulls]="pulls"></app-wish-chart-rarity>
       <app-wish-last-legendary [pulls]="pulls" [banner]="selectedBanner"></app-wish-last-legendary>
     </div>
+    <app-wish-chart-freq class="w-full pl-40 pr-40"  [pulls]="pulls" [banner]="selectedBanner"></app-wish-chart-freq>
+    <app-wish-table class="w-full" [pulls]="pulls"></app-wish-table>
   </div>
 </div>
