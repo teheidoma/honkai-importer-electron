@@ -28,11 +28,11 @@ export class HeaderComponent implements OnInit {
       console.log(event);
       this.lastEvent = event;
       this.changesDetector.detectChanges();
-    })
+    });
     this.honkaiService.updatedEvent.subscribe(event => {
-      this.updating = false
-      console.log("updated")
-    })
+      this.updating = false;
+      console.log('updated');
+    });
   }
 
   getLastUpdated() {

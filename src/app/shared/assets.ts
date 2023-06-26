@@ -1,18 +1,24 @@
 import {Asset} from "../core/model/asset";
 
 export class Assets {
-  public static assets:Asset[] = [
-    {
-      id: 1683400200000276500,
-      img: 'assets/img/char/selee_full.webp'
-    },
-    {
-      id: 1683274200000301600,
-      img: 'https://img.game8.co/3651394/9d71142e5519f9f7583d244ddf509433.png/show'
-    },
-    {
-      id: 1683191400000485000,
-      img: 'https://img.game8.co/3649161/fb1f05f6556b2b908a3d5ae482938607.png/show'
-    }
-  ]
+  public static charAliases = new Map<number, string>(
+    [
+      [1001, 'mar7th'],
+      [1002, 'danheng'],
+      [1003, 'himeko'],
+      [1008, 'arlan'],
+      [1009, 'asta'],
+      [1101, 'bronya'],
+      [1102, 'seele'],
+      [1103, 'serval'],
+      [1105, 'natasha'],
+      [1106, 'pela'],
+      [1107, 'clara'],
+      [1109, 'hook'],
+      [1201, 'qingque'],
+      [1202, 'tingyun'],
+      [1206, 'sushang'],
+      [1209, 'yanqing']
+    ]
+  );
 }

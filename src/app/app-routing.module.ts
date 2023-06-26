@@ -19,6 +19,7 @@ const routes: Routes = [
   {path: 'wish/event', component: WishComponent, data: {gacha_type: 11}},
   {path: 'wish/weapon', component: WishComponent, data: {gacha_type: 12}},
   {path: 'wish/new', component: WishComponent, data: {gacha_type: 2}},
+  {path: 'wish/total', component: WishComponent, data: {gacha_type: -1}},
   {path: 'time', component: TimeComponent},
   {
     path: '**',

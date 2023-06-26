@@ -17,10 +17,11 @@ import { WishLastLegendaryComponent } from './components/wish/wish-last-legendar
 import { WishChartRarityComponent } from './components/wish/wish-chart-rarity/wish-chart-rarity.component';
 import { WishChartFreqComponent } from './components/wish/wish-chart-freq/wish-chart-freq.component';
 import { HeaderComponent } from './components/header/header.component';
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
   declarations: [PageNotFoundComponent, WebviewDirective, NavbarComponent, WishBannerComponent, WishLabelComponent, WishTableComponent, NavbarItemComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent],
-  imports: [CommonModule, TranslateModule, FormsModule, RouterLink],
+    imports: [CommonModule, TranslateModule, FormsModule, RouterLink, FontAwesomeModule],
     exports: [TranslateModule, WebviewDirective, FormsModule, NavbarComponent, WishTableComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent]
 })
 export class SharedModule {}

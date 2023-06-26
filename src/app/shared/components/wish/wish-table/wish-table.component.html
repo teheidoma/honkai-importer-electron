@@ -1,19 +1,36 @@
-<div class="h-96 p-10">
-<table class="table-auto w-full h-full overflow-y-scroll whitespace-nowrap">
-  <tr>
-    <th>Time</th>
-    <th>pity</th>
-    <th>name</th>
-    <th>rarity</th>
-  </tr>
-<!--  https://gridjs.io-->
-  <tr class="wish-row h-16 font-regular text-gray-300"
-      [class.star4]="pull.rank_type == 4" [class.star5]="pull.rank_type == 5"
-      *ngFor="let pull of this.pulls; index as i">
-    <td class="pl-5 ">{{pull.time}}</td>
-    <td>{{pull.rank_type > 3 ? lastPityFrom(pull.rank_type, i) : ''}}</td>
-    <td>{{pull.name}}</td>
-    <td>{{pull.rank_type}}</td>
-  </tr>
-</table>
+<div class="h-96 p-10 flex flex-col items-center">
+  <div class="flex gap-2">
+    <button class="pl-3 pr-3 border rounded-2xl"
+            [class.bg-amber-400]="isSelected(5)"
+            (click)="toggleSelect(5)">5
+    </button>
+    <button class="pl-3 pr-3 border rounded-2xl"
+            [class.bg-purple-400]="isSelected(4)"
+            (click)="toggleSelect(4)">4
+    </button>
+    <button class="pl-3 pr-3 border rounded-2xl"
+            [class.bg-gray-300]="isSelected(3)"
+            (click)="toggleSelect(3)">3
+    </button>
+  </div>
+  <table class="h-full overflow-y-scroll" style="width: 60%">
+    <!--  <tr>-->
+    <!--    <th>Time</th>-->
+    <!--    <th>pity</th>-->
+    <!--    <th>name</th>-->
+    <!--    <th>rarity</th>-->
+    <!--  </tr>-->
+    <!--  https://gridjs.io-->
+    <tr class="wish-row h-16 font-regular"
+        [class.text-purple-400]="pull.rank_type == 4"
+        [class.text-amber-400]="pull.rank_type == 5"
+        [class.text-gray-300]="pull.rank_type == 3"
+
+        *ngFor="let pull of getFilteredPulls(); index as i">
+      <img class="mt-3 w-16 h-16 block" src="{{findIconForPull(pull)}}" alt="">
+      <td class="pl-5 pr-2">{{formatDate(pull.time, 'yyyy-MM-dd', 'en')}}</td>
+      <td class="pr-2 w-24 text-center" [style.color]="getPityColor(pull)">{{pull.rank_type > 3 ? lastPityFrom(pull) : ''}}</td>
+      <td class="pr-2 ">{{pull.name}}</td>
+    </tr>
+  </table>
 </div>

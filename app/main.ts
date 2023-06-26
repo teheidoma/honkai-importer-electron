@@ -1,6 +1,4 @@
-import {app, BrowserWindow, ipcMain, screen, dialog} from 'electron';
-
-const {autoUpdater} = require('electron-updater');
+import {app, BrowserWindow, ipcMain, screen, dialog, Tray, Menu} from 'electron';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -11,8 +9,12 @@ import {exec} from "child_process";
 
 
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
+const baseUrl = 'http://localhost:8080';
 
 let win: BrowserWindow = null;
+let isQuiting: boolean;
+let tray;
+
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
@@ -23,9 +25,9 @@ function get_file_by_registry(callback: (result: string | undefined) => void) {
   regedit.list([registryKey], (err, keys) => {
     if (err == null) {
       let baseDir = keys[registryKey].values['InstallPath'].value;
-      let path = baseDir + '\\Games\\StarRail_Data\\webCaches\\Cache\\Cache_Data\\data_2'
-      if (fs.existsSync(path)) {
-        callback(path)
+      // let path = baseDir + '\\Games\\StarRail_Data\\webCaches\\Cache\\Cache_Data\\data_2'
+      if (fs.existsSync(baseDir as string)) {
+        callback(baseDir as string)
       } else {
         callback(undefined);
       }
@@ -68,7 +70,7 @@ function start_upload(event: Electron.IpcMainEvent, path: string) {
 function upload(event: Electron.IpcMainEvent, path: string) {
   path = path + '\\Games\\StarRail_Data\\webCaches\\Cache\\Cache_Data\\data_2'
   fs.createReadStream(path).pipe(fs.createWriteStream("data.temp", {flags: 'a'}));
-  axios.post('http://teheidoma.com:8085' + '/parse', {
+  axios.post(baseUrl + '/parse', {
     file: fs.createReadStream(path, {flags: 'r'})
   }, {
     headers: {
@@ -94,6 +96,27 @@ function createWindow(): BrowserWindow {
 
   const size = screen.getPrimaryDisplay().workAreaSize;
 
+  let icoPath = path.join(__dirname, '..', 'icon.png');
+  console.log(icoPath)
+  tray = new Tray(icoPath)
+  tray.setContextMenu(Menu.buildFromTemplate(
+    [
+      {
+        label: "restore",
+        click: function() {
+          win.show();
+        }
+      },
+      {
+        label: "quit",
+        click: function () {
+          isQuiting = true;
+          app.quit();
+        }
+      }
+    ]
+  ))
+
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
@@ -106,6 +129,7 @@ function createWindow(): BrowserWindow {
       contextIsolation: false,  // false if you want to run e2e test with Spectron
     },
   });
+  win.removeMenu();
 
   if (serve) {
     const debug = require('electron-debug');
@@ -127,12 +151,22 @@ function createWindow(): BrowserWindow {
   }
 
   // Emitted when the window is closed.
-  win.on('closed', () => {
+  win.on('close', (event) => {
+    if (!isQuiting) {
+      event.preventDefault();
+      win.hide();
+      event.returnValue = false;
+    }
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    win = null;
+    // win = null;
   });
+
+  app.on('before-quit', function () {
+    isQuiting = true;
+  });
+
 
   // win.once('ready-to-show', () => {
   //   autoUpdater.checkForUpdatesAndNotify();
@@ -193,21 +227,21 @@ try {
   app.on('ready', () => setTimeout(createWindow, 400));
 
   // Quit when all windows are closed.
-  app.on('window-all-closed', () => {
+  // app.on('window-all-closed', () => {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-      app.quit();
-    }
-  });
+    // if (process.platform !== 'darwin') {
+    //   app.quit();
+    // }
+  // });
 
-  app.on('activate', () => {
+  // app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win === null) {
-      createWindow();
-    }
-  });
+    // if (win === null) {
+    //   createWindow();
+    // }
+  // });
 
 } catch (e) {
   // Catch Error

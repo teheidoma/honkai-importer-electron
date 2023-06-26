@@ -1,8 +1,10 @@
-<div class="grid grid-cols-3 w-32 gap-2">
-  <img class="col-span-3" src="{{getSrc(banner?.legendary_id)}}" alt="">
-  <img src="{{getSrc(banner?.rare_ids[0])}}" alt="">
-  <img src="{{getSrc(banner?.rare_ids[0])}}" alt="">
-  <img src="{{getSrc(banner?.rare_ids[0])}}" alt="">
-<!--  <img src="{{getSrc('')}}" alt="">-->
-<!--  <img src="{{getSrc('')}}" alt="">-->
+<div class="grid grid-cols-3 w-32 gap-2" *ngIf="banner">
+  <img class="col-span-3" src="{{getSrc(banner?.legendaryId)}}" alt="">
+  <ng-template [ngIf]="banner.rareIds.length === 3">
+    <img src="{{getSrc(banner?.rareIds[0])}}" alt="">
+    <img src="{{getSrc(banner?.rareIds[1])}}" alt="">
+    <img src="{{getSrc(banner?.rareIds[2])}}" alt="">
+  </ng-template>
+  <!--  <img src="{{getSrc('')}}" alt="">-->
+  <!--  <img src="{{getSrc('')}}" alt="">-->
 </div>

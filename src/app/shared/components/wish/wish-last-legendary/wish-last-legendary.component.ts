@@ -33,10 +33,10 @@ export class WishLastLegendaryComponent {
   }
 
   redGradiate(pityFrom: number) {
-    return Utils.redGradiate(pityFrom)
+    return Utils.redGradiate(pityFrom);
   }
 
   getImg(pull: Pull) {
-    return this.honkaiService.getAssetById(pull.id)?.img
+    return this.honkaiService.getAssetById(pull.item_id);
   }
 }

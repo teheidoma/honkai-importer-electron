@@ -3,6 +3,6 @@ export interface Banner {
   name: string|null;
   type: number;
   typeName: string;
-  legendary_id: number;
-  rare_ids: number[];
+  legendaryId: number|string;
+  rareIds: number[];
 }

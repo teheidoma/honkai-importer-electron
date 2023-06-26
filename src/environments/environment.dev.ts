@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
   production: false,
   environment: 'DEV',
-  apiUrl: 'http://teheidoma.com:8085'
+  apiUrl: 'http://localhost:8080'
 };

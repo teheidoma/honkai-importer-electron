@@ -14,12 +14,12 @@ export class WishFeaturedComponent {
   constructor(private honkaiService: HonkaiService) {
   }
 
-  getSrc(assetId:number) {
-    let asset = this.honkaiService.getAssetById(assetId);
-    if (asset){
-      return asset.img
+  getSrc(assetId: number|string) {
+    if (this.banner) {
+      console.log('bb' +this.banner.id+ ' '+assetId);
+      return this.honkaiService.getAssetById(assetId);
     } else {
-      return ''
+      return '';
     }
   }
 }

@@ -9,9 +9,9 @@
     <div class="w-full flex gap-40 p-2 justify-center items-center">
       <app-wish-featured [banner]="selectedBanner" class="w-32"></app-wish-featured>
       <app-wish-chart-rarity [banner]="selectedBanner" class="w-72 h-full" [pulls]="pulls"></app-wish-chart-rarity>
-      <app-wish-last-legendary [pulls]="pulls" [banner]="selectedBanner"></app-wish-last-legendary>
+      <app-wish-last-legendary class="w-32" [pulls]="pulls" [banner]="selectedBanner"></app-wish-last-legendary>
     </div>
     <app-wish-chart-freq class="w-full pl-40 pr-40"  [pulls]="pulls" [banner]="selectedBanner"></app-wish-chart-freq>
-    <app-wish-table class="w-full" [pulls]="pulls"></app-wish-table>
+    <app-wish-table class="w-full" [pulls]="pulls" [banner]="selectedBanner"></app-wish-table>
   </div>
 </div>

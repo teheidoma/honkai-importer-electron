@@ -18,6 +18,7 @@ import { AppComponent } from './app.component';
 import { WishComponent } from './wish/wish.component';
 import { TimeComponent } from './time/time.component';
 import { OnboardComponent } from './onboard/onboard.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -39,7 +40,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new Transl
         useFactory: httpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
