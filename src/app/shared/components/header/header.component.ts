@@ -1,5 +1,6 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {HonkaiService} from "../../../core/services/honkai.service";
+import { faRefresh } from '@fortawesome/free-solid-svg-icons';
+import {HonkaiService} from '../../../core/services/honkai.service';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,8 @@ import {HonkaiService} from "../../../core/services/honkai.service";
 })
 export class HeaderComponent implements OnInit {
   lastEvent: any | undefined;
-  updating = false
+  updating = false;
+  faRefresh = faRefresh;
 
   constructor(private honkaiService: HonkaiService,
               private changesDetector: ChangeDetectorRef) {
@@ -18,7 +20,7 @@ export class HeaderComponent implements OnInit {
     if (this.lastEvent) {
       return this.lastEvent.event;
     } else {
-      return "stoped"
+      return 'stoped';
     }
   }
 
@@ -36,18 +38,18 @@ export class HeaderComponent implements OnInit {
   }
 
   getLastUpdated() {
-    let lastUpdate = localStorage.getItem('updated_at');
+    const lastUpdate = localStorage.getItem('updated_at');
     if (lastUpdate) {
-      let date = new Date(parseInt(lastUpdate!));
-      return date.toDateString()
+      const date = new Date(parseInt(lastUpdate!));
+      return date.toDateString();
     } else {
-      return ''
+      return '';
     }
   }
 
   update() {
-    console.log("update")
-    this.updating = true
+    console.log('update');
+    this.updating = true;
     // this.honkaiService.uploadFile().subscribe()
   }
 }

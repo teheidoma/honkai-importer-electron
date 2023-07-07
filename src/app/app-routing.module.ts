@@ -4,14 +4,14 @@ import {PageNotFoundComponent} from './shared/components';
 
 import {HomeRoutingModule} from './home/home-routing.module';
 import {DetailRoutingModule} from './detail/detail-routing.module';
-import {WishComponent} from "./wish/wish.component";
-import {TimeComponent} from "./time/time.component";
-import {OnboardComponent} from "./onboard/onboard.component";
+import {WishComponent} from './wish/wish.component';
+import {TimeComponent} from './time/time.component';
+import {OnboardComponent} from './onboard/onboard.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'wish/total',
     pathMatch: 'full'
   },
   {path: 'onboard', component: OnboardComponent},

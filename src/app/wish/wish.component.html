@@ -1,17 +1,25 @@
 <div class="w-full flex flex-col items-center text-slate-300">
   <h1 class="font-regular pb-5">{{getSelectedBannerName()}}</h1>
   <div class="w-full flex flex-col items-center gap-2">
-    <div class="border border-secondary font-mono rounded-lg p-2 hover:border-slate-400 hover:shadow-xl transition" (click)="selectBanner(null)">Total {{pulls.length}}</div>
+    <div class="border border-secondary font-mono rounded-lg p-2 hover:border-slate-400 hover:shadow-xl transition"
+         (click)="selectBanner(null)">Total {{pulls.length}}</div>
     <div *ngIf="banners.length > 1" class="flex gap-2">
-      <div class="border border-secondary font-mono rounded-lg p-2 hover:border-slate-400 hover:shadow-xl transition" (click)="selectBanner(banner.id)"
+      <div class="border border-secondary font-mono rounded-lg p-2 hover:border-slate-400 hover:shadow-xl transition"
+           (click)="selectBanner(banner.id)"
            *ngFor="let banner of this.banners">{{banner.name}} {{countPullsForBanner(banner)}}</div>
     </div>
     <div class="w-full flex gap-40 p-2 justify-center items-center">
-      <app-wish-featured [banner]="selectedBanner" class="w-32"></app-wish-featured>
+      <ng-container *ngIf="banners.length == 0 || (banners.length > 0 && !selectedBanner )">
+        <app-wish-banner-ratio></app-wish-banner-ratio>
+      </ng-container>
+      <ng-container *ngIf="selectedBanner">
+        <app-wish-featured [banner]="selectedBanner" class="w-32"></app-wish-featured>
+      </ng-container>
       <app-wish-chart-rarity [banner]="selectedBanner" class="w-72 h-full" [pulls]="pulls"></app-wish-chart-rarity>
-      <app-wish-last-legendary class="w-32" [pulls]="pulls" [banner]="selectedBanner"></app-wish-last-legendary>
+      <app-wish-last-legendary class="w-32" [banners]="banners" [pulls]="pulls"
+                               [banner]="selectedBanner"></app-wish-last-legendary>
     </div>
-    <app-wish-chart-freq class="w-full pl-40 pr-40"  [pulls]="pulls" [banner]="selectedBanner"></app-wish-chart-freq>
+    <app-wish-chart-freq class="w-full pl-40 pr-40" [pulls]="pulls" [banner]="selectedBanner"></app-wish-chart-freq>
     <app-wish-table class="w-full" [pulls]="pulls" [banner]="selectedBanner"></app-wish-table>
   </div>
 </div>

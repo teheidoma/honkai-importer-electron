@@ -21,4 +21,8 @@ export class NavbarItemComponent {
   getRankRatio(rank: number) {
     return (this.pulls.filter(pull => pull.rank_type == rank).length / this.pulls.length * 100).toFixed(1);
   }
+
+  getLastBannerName(banners: Banner[]) {
+    return banners.sort((a, b) => b.id - a.id)[0].name;
+  }
 }

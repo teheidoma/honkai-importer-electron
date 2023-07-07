@@ -16,7 +16,6 @@ export class WishFeaturedComponent {
 
   getSrc(assetId: number|string) {
     if (this.banner) {
-      console.log('bb' +this.banner.id+ ' '+assetId);
       return this.honkaiService.getAssetById(assetId);
     } else {
       return '';

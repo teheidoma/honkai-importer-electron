@@ -72,4 +72,6 @@ export class WishComponent implements OnDestroy {
       return "total"
     }
   }
+
+  protected readonly JSON = JSON;
 }

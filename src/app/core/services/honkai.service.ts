@@ -1,32 +1,34 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {ElectronService} from "./electron/electron.service";
-import {catchError, EMPTY, Observable, of, tap} from "rxjs";
-import {HttpClient} from "@angular/common/http";
-import {APP_CONFIG} from "../../../environments/environment";
-import axios from "axios";
-import * as FormData2 from "form-data";
-import {Pull} from "../model/pull";
-import {TimeRange} from "../model/timeRange";
-import {Banner} from "../model/banner";
-import {Banners} from "../../shared/banners";
-import {Assets} from "../../shared/assets";
-import {Asset} from "../model/asset";
-import log = anychart.scales.log;
+import {ElectronService} from './electron/electron.service';
+import {catchError, EMPTY, Observable, of, tap} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {APP_CONFIG} from '../../../environments/environment';
+import {Pull} from '../model/pull';
+import {TimeRange} from '../model/timeRange';
+import {Banner} from '../model/banner';
+import {Banners} from '../../shared/banners';
+import {Assets} from '../../shared/assets';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class HonkaiService {
-  public statusEvent: EventEmitter<any> = new EventEmitter()
-  public updatedEvent: EventEmitter<any> = new EventEmitter()
+  public statusEvent: EventEmitter<any> = new EventEmitter();
+  public updatedEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private electronService: ElectronService,
               private httpClient: HttpClient) {
     if (this.electronService.isElectron) {
+      this.electronService.ipcRenderer.send('honkai-status');
       this.electronService.ipcRenderer.on('honkai-status', (event, data) => {
-        this.statusEvent.next(data)
-      })
+        this.statusEvent.next(data);
+        if (data.event === 'stopped') {
+          this.sendTime(data).subscribe(resp => {
+            console.log(resp);
+          });
+        }
+      });
     }
   }
 
@@ -48,15 +50,17 @@ export class HonkaiService {
     });
   }
 
-  getPulls(forceUpdate: boolean = false): Observable<Pull[]> {
-    console.log('pulling');
-    let cached = localStorage.getItem('pulls');
-    console.log(cached)
-    console.log(cached && cached !== '[]')
+  sendTime(data: any): Observable<any> {
+    return this.httpClient.post(APP_CONFIG.apiUrl + `/time?secret=${localStorage.getItem('secret')}&from=${data.from}&to=${data.to}`, '');
+  }
+
+  getPulls(forceUpdate: boolean = false, source: string = ''): Observable<Pull[]> {
+    console.log('pulling', source);
+    const cached = localStorage.getItem('pulls');
     if (cached && cached !== '[]') {
       return of(JSON.parse(localStorage.getItem('pulls')!));
     }
-    let secret = localStorage.getItem('secret');
+    const secret = localStorage.getItem('secret');
     console.log(secret + 'ds');
     if (secret != null) {
       return this.httpClient.get<Pull[]>(APP_CONFIG.apiUrl + '/pulls/all?secret=' + secret)
@@ -74,15 +78,14 @@ export class HonkaiService {
   }
 
   getTime(): Observable<TimeRange[]> {
-    let secret = localStorage.getItem('secret');
-    return this.httpClient.get<TimeRange[]>(APP_CONFIG.apiUrl + "/time?secret=" + secret)
+    const secret = localStorage.getItem('secret');
+    return this.httpClient.get<TimeRange[]>(APP_CONFIG.apiUrl + '/time?secret=' + secret)
       .pipe(tap(ranges => {
         localStorage.setItem('ranges', JSON.stringify(ranges));
       }));
   }
 
   getAssetById(id: number | string, icon = false): string {
-    console.log('asset for ' + id);
     if (typeof id == 'string') {
       return `http://teheidoma.com:9000/assets/${id}-${icon ? 'miniiconpath' : 'splashiconpath'}.png`;
     }
@@ -93,6 +96,10 @@ export class HonkaiService {
     }
 
     // return 'https://pbs.twimg.com/media/Fxy5EFWWYAEF5gn?format=jpg&name=small'
+  }
+
+  fetchBannerIcon(pull: Pull) {
+    return 'http://teheidoma.com:9000/assets/banner/'+pull.gacha_id+'.webp';
   }
 
   getBannersByType(type: number): Banner[] {

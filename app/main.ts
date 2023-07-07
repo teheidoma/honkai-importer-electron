@@ -6,10 +6,11 @@ import axios from "axios";
 import * as regedit from 'regedit';
 // import {APP_CONFIG} from "../src/environments/environment";
 import {exec} from "child_process";
+import {HonkaiDetector} from "./honkai-detector";
 
 
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
-const baseUrl = 'http://localhost:8080';
+const baseUrl = 'http://teheidoma.com:8085';
 
 let win: BrowserWindow = null;
 let isQuiting: boolean;
@@ -87,10 +88,6 @@ function upload(event: Electron.IpcMainEvent, path: string) {
   });
 }
 
-function countOccurrences(str: string, value: string) {
-  const regExp = new RegExp(value, "gi");
-  return (str.match(regExp) || []).length;
-}
 
 function createWindow(): BrowserWindow {
 
@@ -103,7 +100,7 @@ function createWindow(): BrowserWindow {
     [
       {
         label: "restore",
-        click: function() {
+        click: function () {
           win.show();
         }
       },
@@ -176,6 +173,7 @@ function createWindow(): BrowserWindow {
     start_upload(event, args)
   })
   ipcMain.on('onboard', (event, args) => {
+    console.log('got event electron', event, args)
     switch (args) {
       case 'registry':
         get_file_by_registry((result) => {
@@ -192,29 +190,16 @@ function createWindow(): BrowserWindow {
     }
 
   })
-  let count = 0, lastCount = 0, startedAt = new Date(0)
-  setInterval(() => {
-    exec('tasklist', (error, stdout, stderr) => {
 
-      count = countOccurrences(stdout, 'StarRail.exe')
-      if (count > lastCount) {
-        win.webContents.send('honkai-status', {
-          'event': 'started',
-        })
-        console.log(`started`)
-        startedAt = new Date()
-      } else if (count < lastCount) {
-        win.webContents.send('honkai-status', {
-          'event': 'stopped',
-          'from': startedAt.getTime(),
-          'to': new Date().getTime()
-        })
-        console.log(`stopped`)
-        startedAt = new Date(0)
-      }
-      lastCount = count
-    });
-  }, 5000)
+  let honkaiDetector = new HonkaiDetector();
+  honkaiDetector.start(win);
+  ipcMain.on('honkai-status', (event) => {
+    honkaiDetector.getCurrent().subscribe(num => {
+      win.webContents.send('honkai-status', {
+        'event': num > 0 ? 'started' : 'stopped'
+      })
+    })
+  });
 
   return win;
 }
@@ -225,22 +210,23 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => setTimeout(createWindow, 400));
+  app.commandLine.appendSwitch('remote-debugging-port', '9229')
 
   // Quit when all windows are closed.
   // app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    // if (process.platform !== 'darwin') {
-    //   app.quit();
-    // }
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  // if (process.platform !== 'darwin') {
+  //   app.quit();
+  // }
   // });
 
   // app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    // if (win === null) {
-    //   createWindow();
-    // }
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  // if (win === null) {
+  //   createWindow();
+  // }
   // });
 
 } catch (e) {

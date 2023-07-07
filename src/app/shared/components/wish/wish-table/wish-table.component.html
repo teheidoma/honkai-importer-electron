@@ -1,16 +1,22 @@
-<div class="h-96 p-10 flex flex-col items-center">
+<div class="h-96 p-10 flex flex-col items-center gap-10">
   <div class="flex gap-2">
-    <button class="pl-3 pr-3 border rounded-2xl"
-            [class.bg-amber-400]="isSelected(5)"
-            (click)="toggleSelect(5)">5
+    <button class="pl-3 pr-3 border-2 w-12 font-mono border-secondary rounded-2xl shadow-2xl"
+            [class.text-amber-400]="isSelected(5)"
+            [class.border-focus]="isSelected(5)"
+            (click)="toggleSelect(5)">
+      <fa-icon [icon]="faStar"/>
     </button>
-    <button class="pl-3 pr-3 border rounded-2xl"
-            [class.bg-purple-400]="isSelected(4)"
-            (click)="toggleSelect(4)">4
+    <button class="pl-3 pr-3 border-2 w-12 font-mono border-secondary rounded-2xl shadow-2xl"
+            [class.text-purple-400]="isSelected(4)"
+            [class.border-focus]="isSelected(4)"
+            (click)="toggleSelect(4)">
+      <fa-icon [icon]="faStar"/>
     </button>
-    <button class="pl-3 pr-3 border rounded-2xl"
-            [class.bg-gray-300]="isSelected(3)"
-            (click)="toggleSelect(3)">3
+    <button class="pl-3 pr-3 border-2 w-12 font-mono border-secondary rounded-2xl shadow-2xl"
+            [class.text-gray-400]="isSelected(3)"
+            [class.border-focus]="isSelected(3)"
+            (click)="toggleSelect(3)">
+      <fa-icon [icon]="faStar"/>
     </button>
   </div>
   <table class="h-full overflow-y-scroll" style="width: 60%">
@@ -21,16 +27,26 @@
     <!--    <th>rarity</th>-->
     <!--  </tr>-->
     <!--  https://gridjs.io-->
+    <thead>
+      <th>Date</th>
+      <th colspan="2">Name</th>
+      <th>Pity</th>
+      <th>Banner</th>
+    </thead>
+    <tbody>
     <tr class="wish-row h-16 font-regular"
-        [class.text-purple-400]="pull.rank_type == 4"
-        [class.text-amber-400]="pull.rank_type == 5"
-        [class.text-gray-300]="pull.rank_type == 3"
+        [class.text-purple-400]="pull.rank_type === 4"
+        [class.text-amber-400]="pull.rank_type === 5"
+        [class.text-gray-300]="pull.rank_type === 3"
 
         *ngFor="let pull of getFilteredPulls(); index as i">
-      <img class="mt-3 w-16 h-16 block" src="{{findIconForPull(pull)}}" alt="">
       <td class="pl-5 pr-2">{{formatDate(pull.time, 'yyyy-MM-dd', 'en')}}</td>
-      <td class="pr-2 w-24 text-center" [style.color]="getPityColor(pull)">{{pull.rank_type > 3 ? lastPityFrom(pull) : ''}}</td>
+      <img class="mt-3 w-16 h-16 block" src="{{findIconForPull(pull)}}" alt="">
       <td class="pr-2 ">{{pull.name}}</td>
+      <td class="pr-2 w-5 text-center"
+          [style.color]="getPityColor(pull)">{{pull.rank_type > 3 ? lastPityFrom(pull) : ''}}</td>
+      <td class="pl-5 pr-2 flex justify-center"><img class="h-12" src="{{fetchBannerIcon(pull)}}" alt=""></td>
     </tr>
+    </tbody>
   </table>
 </div>

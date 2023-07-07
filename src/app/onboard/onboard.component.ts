@@ -7,8 +7,8 @@ import {OnboardService} from "../core/services/onboard.service";
   styleUrls: ['./onboard.component.css']
 })
 export class OnboardComponent implements OnInit {
-  title = 'Вітаю';
-  description = 'триває налаштування';
+  title = 'Hewwo everynyan';
+  description = 'd';
 
   constructor(private onboardService: OnboardService) {
   }
@@ -16,12 +16,15 @@ export class OnboardComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.title = 'eee';
-      this.onboardService.startOnboard(this)
+      this.title = 'Uploading';
+      this.description = '👍❤️🍉'
+      this.onboardService.startOnboard(this).subscribe();
     }, 2000)
   }
 
   tryAgain() {
-    this.onboardService.startUpload(this, localStorage.getItem('path')!)
+    localStorage.clear()
+    this.ngOnInit()
+    // this.onboardService.startUpload(this, localStorage.getItem('path')!)
   }
 }

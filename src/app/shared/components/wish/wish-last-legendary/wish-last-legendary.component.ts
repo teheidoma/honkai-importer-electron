@@ -14,22 +14,28 @@ export class WishLastLegendaryComponent {
   pulls: Pull[] = [];
   @Input()
   banner: Banner | undefined;
+  @Input()
+  banners: Banner[] = [];
 
   constructor(private honkaiService: HonkaiService) {
   }
 
   filteredPulls() {
+    let pulls = [];
     if (this.banner) {
-      return this.pulls.filter(pull => pull.gacha_id == this.banner?.id);
+      pulls = this.pulls.filter(pull => pull.gacha_id === this.banner?.id);
     } else {
-      return this.pulls;
+      if (this.banners.length > 0) {
+        pulls = this.pulls.filter(pull => pull.gacha_type === this.banners[0].type);
+      } else {
+        pulls = this.pulls;
+      }
     }
-    // return bannerPulls
-    // .filter(pull => pull.pull.rank_type == 5)
+    return pulls.filter(p => p.rank_type == 5);
   }
 
-  getPityFrom(i: number) {
-    return Utils.lastPityFrom(this.filteredPulls(), 5, i)
+  getPityFrom(pull: Pull) {
+    return Utils.lastPityFrom(this.pulls, pull);
   }
 
   redGradiate(pityFrom: number) {
@@ -37,6 +43,6 @@ export class WishLastLegendaryComponent {
   }
 
   getImg(pull: Pull) {
-    return this.honkaiService.getAssetById(pull.item_id);
+    return this.honkaiService.getAssetById(pull.item_id, true);
   }
 }

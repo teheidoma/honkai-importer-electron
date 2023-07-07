@@ -18,10 +18,12 @@ import { WishChartRarityComponent } from './components/wish/wish-chart-rarity/wi
 import { WishChartFreqComponent } from './components/wish/wish-chart-freq/wish-chart-freq.component';
 import { HeaderComponent } from './components/header/header.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import { WishBannerRatioComponent } from './components/wish/wish-banner-ratio/wish-banner-ratio.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 @NgModule({
-  declarations: [PageNotFoundComponent, WebviewDirective, NavbarComponent, WishBannerComponent, WishLabelComponent, WishTableComponent, NavbarItemComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent],
+  declarations: [PageNotFoundComponent, WebviewDirective, NavbarComponent, WishBannerComponent, WishLabelComponent, WishTableComponent, NavbarItemComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent, WishBannerRatioComponent, TooltipComponent],
     imports: [CommonModule, TranslateModule, FormsModule, RouterLink, FontAwesomeModule],
-    exports: [TranslateModule, WebviewDirective, FormsModule, NavbarComponent, WishTableComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent]
+    exports: [TranslateModule, WebviewDirective, FormsModule, NavbarComponent, WishTableComponent, WishFeaturedComponent, WishLastLegendaryComponent, WishChartRarityComponent, WishChartFreqComponent, HeaderComponent, WishBannerRatioComponent]
 })
 export class SharedModule {}

@@ -4,6 +4,8 @@ import {formatDate} from '@angular/common';
 import {Banner} from '../../../../core/model/banner';
 import {HonkaiService} from "../../../../core/services/honkai.service";
 import {Utils} from "../../../utils";
+import {faStar} from "@fortawesome/free-solid-svg-icons";
+
 
 @Component({
   selector: 'app-wish-table',
@@ -16,6 +18,7 @@ export class WishTableComponent {
   @Input()
   public banner: Banner | undefined;
   public selectedRanks = [5, 4, 3];
+  faStar = faStar;
 
   constructor(private honkaiService: HonkaiService) {
 
@@ -31,14 +34,19 @@ export class WishTableComponent {
   }
 
   public lastPityFrom(pull: Pull): number {
-    let pulls = this.pulls.filter(p => p.gacha_type === pull.gacha_type);
-    let index = pulls.indexOf(pull);
-    let rank = pull.rank_type;
-    let pity = pulls.slice(index + 1).findIndex(p => p.rank_type === rank);
-    if (pity < 0) {
-      return pulls.slice(index + 1).length;
-    }
-    return pity + 1;
+    // let pulls = this.pulls.filter(p => p.gacha_type === pull.gacha_type);
+    // let index = pulls.indexOf(pull);
+    // let rank = pull.rank_type;
+    // let pity = pulls.slice(index + 1).findIndex(p => p.rank_type === rank);
+    // if (pity < 0) {
+    //   return pulls.slice(index + 1).length;
+    // }
+    // return pity + 1;
+    return Utils.lastPityFrom(this.pulls, pull);
+  }
+
+  public fetchBannerIcon(pull: Pull) {
+    return this.honkaiService.fetchBannerIcon(pull);
   }
 
   findIconForPull(pull: Pull) {

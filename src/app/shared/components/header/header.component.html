@@ -1,10 +1,21 @@
 <header
   class="h-24 bg-primary border-b border-slate-200 border-opacity-50 shadow-2xl fixed bg-primary w-full z-10 flex items-center justify-between">
-  logo
-  <div class="text-slate-200 flex flex-col font-mono">
+  <div class="flex font-mono text-gray-300 items-center gap-5 text-2xl">
+    <img class="pl-2 w-20 rounded-2xl shadow-2xl" src="assets/img/logo.webp" alt="">
+    Microsoft Excel
+  </div>
+  <div class="text-slate-200 flex flex-col font-mono items-center gap-2">
+
     <span>status: {{getStatus()}}</span>
-    <span>last updated: {{getLastUpdated()}}</span>
-    <button (click)="update()">update</button>
-    <span>{{updating}}</span>
+    <div class="flex gap-2 border-2 rounded-2xl pl-2 pr-2 pt-1 pb-1 border-secondary hover:border-focus transition-all">
+      <fa-icon [icon]="faRefresh"></fa-icon>
+      <button (mouseenter)="lastUpdated.setHidden(false)"
+              (mouseleave)="lastUpdated.setHidden(true)">update
+      </button>
+    </div>
+    <app-tooltip class="mt-2 w-40" #lastUpdated [tooltip]="getLastUpdated()"></app-tooltip>
+    <!--    <span>last updated: {{getLastUpdated()}}</span>-->
+    <!--    <button (click)="update()">update</button>-->
+    <!--    <span>{{updating}}</span>-->
   </div>
 </header>
