@@ -45,5 +45,11 @@
         "**/*"
       ]
     }
+  ],
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "teheidoma"
+    }
   ]
 }

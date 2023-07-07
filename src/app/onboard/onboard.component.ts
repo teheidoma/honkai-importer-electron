@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {OnboardService} from "../core/services/onboard.service";
+import {OnboardService} from '../core/services/onboard.service';
 
 @Component({
   selector: 'app-onboard',
@@ -17,14 +17,14 @@ export class OnboardComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.title = 'Uploading';
-      this.description = '👍❤️🍉'
+      this.description = '👍❤️🍉';
       this.onboardService.startOnboard(this).subscribe();
-    }, 2000)
+    }, 2000);
   }
 
   tryAgain() {
-    localStorage.clear()
-    this.ngOnInit()
+    localStorage.clear();
+    this.ngOnInit();
     // this.onboardService.startUpload(this, localStorage.getItem('path')!)
   }
 }

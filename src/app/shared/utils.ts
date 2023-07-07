@@ -3,7 +3,7 @@ import {Pull} from '../core/model/pull';
 export class Utils {
 
   public static lastPityFrom(pulls: Pull[], pull: Pull): number {
-    pulls = pulls.filter(p => p.gacha_type === pull.gacha_type).sort((a: Pull, b: Pull) => b.id - a.id);
+    pulls = pulls.filter(p => p.gachaType === pull.gachaType).sort((a: Pull, b: Pull) => b.id - a.id);
     const index = pulls.indexOf(pull);
     const rank = pull.rank_type;
     const pity = pulls.slice(index + 1).findIndex(p => p.rank_type === rank);

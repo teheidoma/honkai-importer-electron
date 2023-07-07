@@ -7,7 +7,7 @@ import {Component, Input} from '@angular/core';
 })
 export class TooltipComponent {
   @Input()
-  tooltip: string = '';
+  tooltip = '';
   hidden = true;
 
   public toggle() {

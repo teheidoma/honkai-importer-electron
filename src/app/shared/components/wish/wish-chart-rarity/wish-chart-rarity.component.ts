@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Pull} from "../../../../core/model/pull";
-import {groupBy} from "lodash";
-import {Banner} from "../../../../core/model/banner";
+import {Pull} from '../../../../core/model/pull';
+import {groupBy} from 'lodash';
+import {Banner} from '../../../../core/model/banner';
 
 @Component({
   selector: 'app-wish-chart-rarity',
@@ -18,15 +18,15 @@ export class WishChartRarityComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     if (this.chart) {
-      this.chart.data([])
+      this.chart.data([]);
     }
   }
 
   ngOnInit(): void {
-    let data = this.formattedPulls()
-    this.chart = anychart.pie(data)
-    console.log(data)
-    this.chart.palette(['#60a5fa', '#c084fc', '#fbbf24'])
+    const data = this.formattedPulls();
+    this.chart = anychart.pie(data);
+    console.log(data);
+    this.chart.palette(['#60a5fa', '#c084fc', '#fbbf24']);
     this.chart.container('chartContainer');
     this.chart.background()
       .fill('#1D1E22')
@@ -38,15 +38,15 @@ export class WishChartRarityComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.chart) {
-      let data = this.formattedPulls();
-      this.chart.data(data)
+      const data = this.formattedPulls();
+      this.chart.data(data);
     }
   }
 
   private formattedPulls(): (string | number)[][] {
     let pulls = this.pulls;
     if (this.banner) {
-      pulls = pulls.filter(pull => pull.gacha_id == this.banner?.id)
+      pulls = pulls.filter(pull => pull.gacha_id == this.banner?.id);
     }
     return Object.entries(groupBy(pulls, pull => pull.rank_type))
       .map(pulls => [pulls[0], pulls[1].length]);

@@ -5,5 +5,5 @@ export interface Pull {
   rank_type: number;
   item_id: number;
   gacha_id: number;
-  gacha_type: number;
+  gachaType: number;
 }

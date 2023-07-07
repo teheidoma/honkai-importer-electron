@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {ElectronService} from './core/services';
 import {TranslateService} from '@ngx-translate/core';
 import {APP_CONFIG} from '../environments/environment';
-import {HonkaiService} from "./core/services/honkai.service";
-import {Router} from "@angular/router";
+import {HonkaiService} from './core/services/honkai.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,7 @@ export class AppComponent {
     this.translate.setDefaultLang('en');
 
 
-    this.startOnBoardIfNeeded()
+    this.startOnBoardIfNeeded();
 
     if (electronService.isElectron) {
       console.log(process.env);
@@ -39,8 +39,8 @@ export class AppComponent {
 
   startOnBoardIfNeeded() {
     if(!localStorage.getItem('onboard')){
-      localStorage.setItem('onboard', 'true')
-      this.router.navigate(['/onboard'])
+      localStorage.setItem('onboard', 'true');
+      this.router.navigate(['/onboard']);
     }
   }
 

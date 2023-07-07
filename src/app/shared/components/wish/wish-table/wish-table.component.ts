@@ -2,9 +2,9 @@ import {Component, Input} from '@angular/core';
 import {Pull} from '../../../../core/model/pull';
 import {formatDate} from '@angular/common';
 import {Banner} from '../../../../core/model/banner';
-import {HonkaiService} from "../../../../core/services/honkai.service";
-import {Utils} from "../../../utils";
-import {faStar} from "@fortawesome/free-solid-svg-icons";
+import {HonkaiService} from '../../../../core/services/honkai.service';
+import {Utils} from '../../../utils';
+import {faStar} from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -26,7 +26,7 @@ export class WishTableComponent {
 
 
   public lastPity(rank: number): number {
-    let pity = this.pulls.findIndex(p => p.rank_type == rank) + 1;
+    const pity = this.pulls.findIndex(p => p.rank_type == rank) + 1;
     if (pity < 0) {
       return this.pulls.length;
     }
@@ -34,7 +34,7 @@ export class WishTableComponent {
   }
 
   public lastPityFrom(pull: Pull): number {
-    // let pulls = this.pulls.filter(p => p.gacha_type === pull.gacha_type);
+    // let pulls = this.pulls.filter(p => p.gachaType === pull.gachaType);
     // let index = pulls.indexOf(pull);
     // let rank = pull.rank_type;
     // let pity = pulls.slice(index + 1).findIndex(p => p.rank_type === rank);
@@ -73,7 +73,7 @@ export class WishTableComponent {
 
   toggleSelect(rank: number) {
     console.log(this.selectedRanks);
-    let index = this.selectedRanks.indexOf(rank);
+    const index = this.selectedRanks.indexOf(rank);
     console.log(index);
     if (index >= 0) {
       this.selectedRanks.splice(index, 1);

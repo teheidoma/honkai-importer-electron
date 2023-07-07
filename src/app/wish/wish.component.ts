@@ -1,13 +1,13 @@
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
-import {Pull} from "../core/model/pull";
-import {ActivatedRoute} from "@angular/router";
-import {HonkaiService} from "../core/services/honkai.service";
-import {Banner} from "../core/model/banner";
+import {Pull} from '../core/model/pull';
+import {ActivatedRoute} from '@angular/router';
+import {HonkaiService} from '../core/services/honkai.service';
+import {Banner} from '../core/model/banner';
 import bar = anychart.bar;
-import {Banners} from "../shared/banners";
-import {constants} from "os";
+import {Banners} from '../shared/banners';
+import {constants} from 'os';
 import Pie = anychart.charts.Pie;
-import {groupBy} from "lodash";
+import {groupBy} from 'lodash';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class WishComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.chart?.data([])
+    this.chart?.data([]);
   }
 
   ngOnInit(): void {
@@ -41,9 +41,9 @@ export class WishComponent implements OnDestroy {
   private showPulls(pulls: Pull[]) {
     this.activatedRoute.data
       .subscribe(data => {
-        if (data['gacha_type'] > 0) {
-          this.pulls = pulls.filter(p => p.gacha_type === data['gacha_type']).sort((a: Pull, b: Pull) => b.id - a.id);
-          this.banners = Banners.banners.filter(b => b.type === data['gacha_type']);
+        if (data.gachaType > 0) {
+          this.pulls = pulls.filter(p => p.gachaType === data.gachaType).sort((a: Pull, b: Pull) => b.id - a.id);
+          this.banners = Banners.banners.filter(b => b.type === data.gachaType);
           this.selectedBanner = this.banners[0];
         } else {
           this.pulls = pulls;
@@ -62,14 +62,14 @@ export class WishComponent implements OnDestroy {
   }
 
   countPullsForBanner(banner: Banner) {
-    return this.pulls.filter(pull => pull.gacha_id == banner.id).length
+    return this.pulls.filter(pull => pull.gacha_id == banner.id).length;
   }
 
   getSelectedBannerName() {
     if (this.selectedBanner) {
       return this.selectedBanner.name;
     } else {
-      return "total"
+      return 'total';
     }
   }
 

@@ -37,7 +37,7 @@ export class WishChartFreqComponent {
     this.chart.container('freq-chart');
     this.chart.tooltip().useHtml(true);
     this.chart.tooltip()
-      .format(function () {
+      .format(function() {
         // @ts-ignore
         const id = this.series.id();
         switch (id) {

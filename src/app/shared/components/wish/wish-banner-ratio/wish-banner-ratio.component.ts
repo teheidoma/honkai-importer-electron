@@ -1,10 +1,10 @@
 import {Component, NgZone, OnInit} from '@angular/core';
-import {Chart} from "chart.js/auto";
-import {HonkaiService} from "../../../../core/services/honkai.service";
-import {map} from "rxjs";
+import {Chart} from 'chart.js/auto';
+import {HonkaiService} from '../../../../core/services/honkai.service';
+import {map} from 'rxjs';
 import * as _ from 'lodash';
-import {Pull} from "../../../../core/model/pull";
-import {Banners} from "../../../banners";
+import {Pull} from '../../../../core/model/pull';
+import {Banners} from '../../../banners';
 
 
 @Component({
@@ -22,26 +22,26 @@ export class WishBannerRatioComponent implements OnInit {
 
   ngOnInit(): void {
     this.createChart();
-    console.log('333init')
+    console.log('333init');
   }
 
   public createChart() {
     this.honkaiService.getPulls()
       .subscribe(pulls => {
         this.ngZone.run(() => {
-          let grouped = _.groupBy(pulls, (pull: Pull) => pull.gacha_id);
-          let sorted = Object.entries(grouped).map(g => ({id: g[0], len: g[1].length})).sort((a, b) => b.len - a.len)
+          const grouped = _.groupBy(pulls, (pull: Pull) => pull.gacha_id);
+          const sorted = Object.entries(grouped).map(g => ({id: g[0], len: g[1].length})).sort((a, b) => b.len - a.len);
           console.log('333', sorted);
-          let labels = sorted.map(g => g.id)
+          const labels = sorted.map(g => g.id)
             .map(g => {
-              let found = Banners.banners.find(b => b.id.toString() === g)
+              const found = Banners.banners.find(b => b.id.toString() === g);
               if (found?.name) {
                 return found.name;
               } else {
                 return found?.typeName!;
               }
             });
-          console.log('labels', labels)
+          console.log('labels', labels);
           this.chart = new Chart('MyChart', {
             type: 'pie',
             options: {
@@ -54,7 +54,7 @@ export class WishBannerRatioComponent implements OnInit {
               }
             },
             data: {
-              labels: labels,
+              labels,
               datasets: [
                 {
                   data: sorted.map(g => g.len)

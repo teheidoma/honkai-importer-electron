@@ -1,4 +1,4 @@
-import {Asset} from "../core/model/asset";
+import {Asset} from '../core/model/asset';
 
 export class Assets {
   public static charAliases = new Map<number, string>(

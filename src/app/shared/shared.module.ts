@@ -7,7 +7,7 @@ import { PageNotFoundComponent } from './components/';
 import { WebviewDirective } from './directives/';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import {RouterLink} from "@angular/router";
+import {RouterLink} from '@angular/router';
 import { WishBannerComponent } from './components/wish/wish-banner/wish-banner.component';
 import { WishLabelComponent } from './components/wish/wish-label/wish-label.component';
 import { WishTableComponent } from './components/wish/wish-table/wish-table.component';
@@ -17,7 +17,7 @@ import { WishLastLegendaryComponent } from './components/wish/wish-last-legendar
 import { WishChartRarityComponent } from './components/wish/wish-chart-rarity/wish-chart-rarity.component';
 import { WishChartFreqComponent } from './components/wish/wish-chart-freq/wish-chart-freq.component';
 import { HeaderComponent } from './components/header/header.component';
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { WishBannerRatioComponent } from './components/wish/wish-banner-ratio/wish-banner-ratio.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 

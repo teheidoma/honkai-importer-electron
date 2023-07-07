@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {HonkaiService} from "../../../../core/services/honkai.service";
-import {Banner} from "../../../../core/model/banner";
+import {HonkaiService} from '../../../../core/services/honkai.service';
+import {Banner} from '../../../../core/model/banner';
 
 @Component({
   selector: 'app-wish-featured',

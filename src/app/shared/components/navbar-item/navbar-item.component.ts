@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {Pull} from "../../../core/model/pull";
-import {Banner} from "../../../core/model/banner";
+import {Pull} from '../../../core/model/pull';
+import {Banner} from '../../../core/model/banner';
 
 @Component({
   selector: 'app-navbar-item',
@@ -15,7 +15,7 @@ export class NavbarItemComponent {
 
 
   countPullsByRank(rank: number) {
-    return this.pulls.filter(pull => pull.rank_type == rank).length
+    return this.pulls.filter(pull => pull.rank_type == rank).length;
   }
 
   getRankRatio(rank: number) {

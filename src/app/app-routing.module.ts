@@ -15,11 +15,11 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {path: 'onboard', component: OnboardComponent},
-  {path: 'wish/standard', component: WishComponent, data: {gacha_type: 1}},
-  {path: 'wish/event', component: WishComponent, data: {gacha_type: 11}},
-  {path: 'wish/weapon', component: WishComponent, data: {gacha_type: 12}},
-  {path: 'wish/new', component: WishComponent, data: {gacha_type: 2}},
-  {path: 'wish/total', component: WishComponent, data: {gacha_type: -1}},
+  {path: 'wish/standard', component: WishComponent, data: {gachaType: 1}},
+  {path: 'wish/event', component: WishComponent, data: {gachaType: 11}},
+  {path: 'wish/weapon', component: WishComponent, data: {gachaType: 12}},
+  {path: 'wish/new', component: WishComponent, data: {gachaType: 2}},
+  {path: 'wish/total', component: WishComponent, data: {gachaType: -1}},
   {path: 'time', component: TimeComponent},
   {
     path: '**',

@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {Pull} from "../../../../core/model/pull";
-import {Banner} from "../../../../core/model/banner";
-import {Utils} from "../../../../shared/utils";
-import {HonkaiService} from "../../../../core/services/honkai.service";
+import {Pull} from '../../../../core/model/pull';
+import {Banner} from '../../../../core/model/banner';
+import {Utils} from '../../../../shared/utils';
+import {HonkaiService} from '../../../../core/services/honkai.service';
 
 @Component({
   selector: 'app-wish-last-legendary',
@@ -26,7 +26,7 @@ export class WishLastLegendaryComponent {
       pulls = this.pulls.filter(pull => pull.gacha_id === this.banner?.id);
     } else {
       if (this.banners.length > 0) {
-        pulls = this.pulls.filter(pull => pull.gacha_type === this.banners[0].type);
+        pulls = this.pulls.filter(pull => pull.gachaType === this.banners[0].type);
       } else {
         pulls = this.pulls;
       }
