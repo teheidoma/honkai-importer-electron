@@ -7,6 +7,8 @@ import * as regedit from 'regedit';
 // import {APP_CONFIG} from "../src/environments/environment";
 import {exec} from "child_process";
 import {HonkaiDetector} from "./honkai-detector";
+import { autoUpdater } from "electron-updater"
+
 
 
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';

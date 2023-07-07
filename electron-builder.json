@@ -11,7 +11,9 @@
     "!package-lock.json",
     {
       "from": "../dist",
-      "filter": ["**/*"]
+      "filter": [
+        "**/*"
+      ]
     }
   ],
   "win": {
