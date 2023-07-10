@@ -57,7 +57,7 @@ export class HonkaiService {
   getPulls(forceUpdate: boolean = false, source: string = ''): Observable<Pull[]> {
     console.log('pulling', source);
     const cached = localStorage.getItem('pulls');
-    if (cached && cached !== '[]') {
+    if (!forceUpdate && cached && cached !== '[]') {
       return of(JSON.parse(localStorage.getItem('pulls')!));
     }
     const secret = localStorage.getItem('secret');

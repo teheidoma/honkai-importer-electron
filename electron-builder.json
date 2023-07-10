@@ -17,24 +17,9 @@
     }
   ],
   "win": {
-    "icon": "dist/assets/icons",
+    "icon": "dist/assets/icons/favicon.ico",
     "target": [
-      "portable"
-    ]
-  },
-  "portable": {
-    "splashImage": "dist/assets/icons/electron.bmp"
-  },
-  "mac": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "dmg"
-    ]
-  },
-  "linux": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "AppImage"
+      "nsis"
     ]
   },
   "extraResources": [
@@ -49,7 +34,9 @@
   "publish": [
     {
       "provider": "github",
-      "owner": "teheidoma"
+      "owner": "teheidoma",
+      "token": "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",
+      "repo": "honkai-importer-electron"
     }
   ]
 }

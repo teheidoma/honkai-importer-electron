@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Pull} from '../../../core/model/pull';
 import {HonkaiService} from '../../../core/services/honkai.service';
 import {Banner} from '../../../core/model/banner';
-import {Observable, map} from 'rxjs';
-import {faEarthEurope, faClock} from '@fortawesome/free-solid-svg-icons';
+import {faClock, faEarthEurope} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navbar',
@@ -15,21 +14,25 @@ export class NavbarComponent implements OnInit {
   faClock = faClock;
   pulls: Pull[] = [];
 
-  constructor(private honkaiService: HonkaiService) {
+  constructor(private honkaiService: HonkaiService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.honkaiService.getPulls(false, 'navbar').subscribe(pulls => this.pulls = pulls);
+    this.honkaiService.getPulls(true, 'navbar')
+      .subscribe(pulls => {
+        console.log("navbar init")
+        this.pulls = pulls;
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
 
-  getPullForGachaType(number: number): Pull[] {
-    return this.pulls.filter((pull: Pull) => pull.gachaType === number);
-    // return this.honkaiService.getPulls(false, 'navbar')
-    //   .pipe(map(pulls => pulls.filter((pull: Pull) => pull.gachaType === number)));
+  getPullForgacha_type(gacha_type: number): Pull[] {
+    return this.pulls.filter((pull: Pull) => pull.gacha_type === gacha_type);
   }
 
-  getBannerForGachaType(type: number): Banner[] {
+  getBannerForgacha_type(type: number): Banner[] {
     return this.honkaiService.getBannersByType(type);
   }
 }

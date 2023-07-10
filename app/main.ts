@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, screen, dialog, Tray, Menu} from 'electron';
+import {app, BrowserWindow, ipcMain, screen, dialog, Tray, Menu, globalShortcut} from 'electron';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -92,10 +92,10 @@ function upload(event: Electron.IpcMainEvent, path: string) {
 
 
 function createWindow(): BrowserWindow {
-
+  autoUpdater.checkForUpdatesAndNotify();
   const size = screen.getPrimaryDisplay().workAreaSize;
 
-  let icoPath = path.join(__dirname, '..', 'icon.png');
+  let icoPath = path.join(__dirname, '/img/icon.png');
   console.log(icoPath)
   tray = new Tray(icoPath)
   tray.setContextMenu(Menu.buildFromTemplate(
@@ -130,6 +130,9 @@ function createWindow(): BrowserWindow {
   });
   win.removeMenu();
 
+  const ret = globalShortcut.register('F11', () => {
+    win.webContents.openDevTools()
+  })
   if (serve) {
     const debug = require('electron-debug');
     debug();

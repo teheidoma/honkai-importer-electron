@@ -41,10 +41,10 @@ export class WishComponent implements OnDestroy {
   private showPulls(pulls: Pull[]) {
     this.activatedRoute.data
       .subscribe(data => {
-        if (data.gachaType > 0) {
-          this.pulls = pulls.filter(p => p.gachaType === data.gachaType).sort((a: Pull, b: Pull) => b.id - a.id);
-          this.banners = Banners.banners.filter(b => b.type === data.gachaType);
-          this.selectedBanner = this.banners[0];
+        if (data.gacha_type > 0) {
+          this.pulls = pulls.filter(p => p.gacha_type === data.gacha_type).sort((a: Pull, b: Pull) => b.id - a.id);
+          this.banners = Banners.banners.filter(b => b.type === data.gacha_type);
+          this.selectedBanner = this.banners.sort((a, b)=>a.id - b.id)[0];
         } else {
           this.pulls = pulls;
           this.banners = [];
@@ -55,7 +55,7 @@ export class WishComponent implements OnDestroy {
 
   selectBanner(id: number | null) {
     if (id) {
-      this.selectedBanner = this.banners.filter(b => b.id == id)[0];
+      this.selectedBanner = this.banners.filter(b => b.id === id)[0];
     } else {
       this.selectedBanner = undefined;
     }

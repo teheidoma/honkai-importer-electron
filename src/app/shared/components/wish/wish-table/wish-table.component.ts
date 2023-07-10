@@ -34,14 +34,6 @@ export class WishTableComponent {
   }
 
   public lastPityFrom(pull: Pull): number {
-    // let pulls = this.pulls.filter(p => p.gachaType === pull.gachaType);
-    // let index = pulls.indexOf(pull);
-    // let rank = pull.rank_type;
-    // let pity = pulls.slice(index + 1).findIndex(p => p.rank_type === rank);
-    // if (pity < 0) {
-    //   return pulls.slice(index + 1).length;
-    // }
-    // return pity + 1;
     return Utils.lastPityFrom(this.pulls, pull);
   }
 

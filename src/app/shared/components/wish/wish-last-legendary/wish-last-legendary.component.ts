@@ -26,12 +26,12 @@ export class WishLastLegendaryComponent {
       pulls = this.pulls.filter(pull => pull.gacha_id === this.banner?.id);
     } else {
       if (this.banners.length > 0) {
-        pulls = this.pulls.filter(pull => pull.gachaType === this.banners[0].type);
+        pulls = this.pulls.filter(pull => pull.gacha_type === this.banners[0].type);
       } else {
         pulls = this.pulls;
       }
     }
-    return pulls.filter(p => p.rank_type == 5);
+    return pulls.filter(p => p.rank_type === 5);
   }
 
   getPityFrom(pull: Pull) {
