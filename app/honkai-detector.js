@@ -8,9 +8,10 @@ class HonkaiDetector {
         this.count = 0;
         this.lastCount = 0;
         this.startedAt = new Date(0);
+        this.timer = null;
     }
     start(win) {
-        setInterval(() => {
+        this.timer = setInterval(() => {
             this.countProccesses().subscribe(count => {
                 this.count = count;
                 if (this.count > this.lastCount) {
@@ -32,6 +33,12 @@ class HonkaiDetector {
                 this.lastCount = this.count;
             });
         }, 5000);
+    }
+    stop() {
+        if (this.timer) {
+            this.timer.unref();
+            clearInterval(this.timer);
+        }
     }
     getCurrent() {
         return this.countProccesses();

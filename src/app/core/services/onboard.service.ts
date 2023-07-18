@@ -53,6 +53,7 @@ export class OnboardService {
       .subscribe(response => {
         if (response.success) {
           this.router.navigate(['/']);
+          this.honkaiService.refreshTime();
         } else {
           this.ngZone.run(() => {
             onboardComponent.title = 'Something has failed';

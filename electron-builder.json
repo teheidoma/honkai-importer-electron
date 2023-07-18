@@ -20,7 +20,8 @@
     "icon": "dist/assets/icons/favicon.ico",
     "target": [
       "nsis"
-    ]
+    ],
+    "requestedExecutionLevel": "highestAvailable"
   },
   "extraResources": [
     {

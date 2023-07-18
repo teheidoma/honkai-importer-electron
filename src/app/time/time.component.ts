@@ -3,6 +3,7 @@ import {TimeRange} from '../core/model/timeRange';
 import {HonkaiService} from '../core/services/honkai.service';
 import 'anychart';
 import * as _ from 'lodash';
+import {formatDate} from "@angular/common";
 
 @Component({
   selector: 'app-time',
@@ -13,6 +14,9 @@ export class TimeComponent {
   @Input()
   ranges: TimeRange[] = [];
   gameStarted = false;
+  today: string = '';
+  week: string = '';
+
 
   constructor(private honkaiService: HonkaiService) {
   }
@@ -20,14 +24,17 @@ export class TimeComponent {
   getAllPulls() {
     this.honkaiService.getTime().subscribe(ranges => {
       this.ranges = ranges;
+      // this.ranges.sort((a, b) => a.)
       this.draw();
+      this.getToday();
+      this.getWeek();
     });
   }
 
   ngOnInit(): void {
     this.getAllPulls();
     this.honkaiService.statusEvent.subscribe(event => {
-      this.gameStarted = event.event == 'started';
+      this.gameStarted = event.event === 'started';
     });
   }
 
@@ -43,13 +50,12 @@ export class TimeComponent {
       x: 'day',
       value: 'duration'
     });
-    console.log(this.ranges);
 
     // pass the mapped data to the calendar function
     const chart = anychart.calendar(mapping);
 
     // specify the color of the background
-    chart.background('#0d1117');
+    chart.background('#38393D');
 
     // configure a custom color scale
     const customColorScale = anychart.scales.linearColor();
@@ -75,7 +81,7 @@ export class TimeComponent {
       .noDataHatchFill(false);
 
     // set the height of the chart
-    chart.listen('chartDraw', function() {
+    chart.listen('chartDraw', function () {
       const elementById = document.getElementById('chartContainer');
       if (elementById != null) {
         // elementById.style.height = '500px';
@@ -90,11 +96,12 @@ export class TimeComponent {
       .fontSize(22)
       .fontWeight(500)
       .fontColor('#dfdfdf')
+      .fontFamily('Montserrat')
       .padding(10);
 
     // configure the chart tooltip
     chart.tooltip()
-      .format('{%tooltip} contributions');
+      .format('{%tooltip} played');
 
     // configure the inverted order of years
     chart.years().inverted(true);
@@ -106,4 +113,27 @@ export class TimeComponent {
     chart.draw();
   }
 
+  getWeek() {
+    let dates = Array.from(Array(7).keys())
+      .map((idx) => {
+        const d = new Date();
+        d.setDate(d.getDate() - d.getDay() + idx);
+        return d;
+      })
+      .map(date => formatDate(date, 'yyyy-MM-dd', 'en'));
+
+    this.week =
+      new Date(1000 *
+        this.ranges.filter(range => range.day in dates).reduce((a, range: TimeRange) => {
+          a.duration += range.duration;
+          return a;
+        }).duration).toISOString();
+  }
+
+  getToday() {
+    let find = this.ranges.find(range => range.day == formatDate(Date.now(), 'yyyy-MM-dd', 'en'));
+    console.log('find', find)
+    console.log('find', this.ranges)
+    this.today = find!.tooltip;
+  }
 }

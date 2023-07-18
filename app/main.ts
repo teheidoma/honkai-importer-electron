@@ -5,10 +5,8 @@ import * as fs from 'fs';
 import axios from "axios";
 import * as regedit from 'regedit';
 // import {APP_CONFIG} from "../src/environments/environment";
-import {exec} from "child_process";
 import {HonkaiDetector} from "./honkai-detector";
-import { autoUpdater } from "electron-updater"
-
+import {autoUpdater} from "electron-updater"
 
 
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
@@ -17,6 +15,7 @@ const baseUrl = 'http://teheidoma.com:8085';
 let win: BrowserWindow = null;
 let isQuiting: boolean;
 let tray;
+let honkaiDetector = new HonkaiDetector();
 
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
@@ -55,17 +54,6 @@ function get_file_by_dialog(): string | undefined {
 
 function start_upload(event: Electron.IpcMainEvent, path: string) {
   console.log("importing data")
-  // get_file_by_registry(path => {
-  //   if (!path) {
-  //     while (true) {
-  //       path = get_file_by_dialog()
-  //       if (!path) {
-  //         dialog.showErrorBox('error', "failed to locate honkai folder")
-  //       } else {
-  //         break
-  //       }
-  //     }
-  //   }
   console.log("path is " + path)
   upload(event, path)
 }
@@ -90,6 +78,19 @@ function upload(event: Electron.IpcMainEvent, path: string) {
   });
 }
 
+
+function autorun() {
+  regedit.putValue({
+    'HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run': {
+      HonkaiImporter: {
+        value: app.getPath("exe"),
+        type: 'REG_SZ'
+      }
+    }
+  }, e => {
+    console.log(e)
+  })
+}
 
 function createWindow(): BrowserWindow {
   autoUpdater.checkForUpdatesAndNotify();
@@ -154,6 +155,7 @@ function createWindow(): BrowserWindow {
 
   // Emitted when the window is closed.
   win.on('close', (event) => {
+    console.log("close", isQuiting)
     if (!isQuiting) {
       event.preventDefault();
       win.hide();
@@ -162,10 +164,16 @@ function createWindow(): BrowserWindow {
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    // win = null;
+  });
+  process.on('exit', () => {
+    console.log("exit")
+    honkaiDetector.stop()
+    app.quit();
   });
 
+
   app.on('before-quit', function () {
+    console.log("before quit")
     isQuiting = true;
   });
 
@@ -173,7 +181,9 @@ function createWindow(): BrowserWindow {
   // win.once('ready-to-show', () => {
   //   autoUpdater.checkForUpdatesAndNotify();
   // });
-
+  ipcMain.on('autorun', event => {
+    autorun()
+  })
   ipcMain.on('upload', (event, args) => {
     start_upload(event, args)
   })
@@ -196,7 +206,7 @@ function createWindow(): BrowserWindow {
 
   })
 
-  let honkaiDetector = new HonkaiDetector();
+  honkaiDetector = new HonkaiDetector();
   honkaiDetector.start(win);
   ipcMain.on('honkai-status', (event) => {
     honkaiDetector.getCurrent().subscribe(num => {

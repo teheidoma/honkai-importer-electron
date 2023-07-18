@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Pull} from '../../../core/model/pull';
 import {HonkaiService} from '../../../core/services/honkai.service';
 import {Banner} from '../../../core/model/banner';
-import {faClock, faEarthEurope} from '@fortawesome/free-solid-svg-icons';
+import {faClock, faEarthEurope, faGear} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +12,7 @@ import {faClock, faEarthEurope} from '@fortawesome/free-solid-svg-icons';
 export class NavbarComponent implements OnInit {
   faEarthEurope = faEarthEurope;
   faClock = faClock;
+  faGear = faGear;
   pulls: Pull[] = [];
 
   constructor(private honkaiService: HonkaiService,

@@ -1,5 +1,5 @@
 export interface TimeRange {
-  day: number;
+  day: string;
   duration: number;
   tooltip: string;
 }

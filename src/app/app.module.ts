@@ -19,12 +19,13 @@ import { WishComponent } from './wish/wish.component';
 import { TimeComponent } from './time/time.component';
 import { OnboardComponent } from './onboard/onboard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SettingsComponent } from './settings/settings.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
 @NgModule({
-  declarations: [AppComponent, WishComponent, TimeComponent, OnboardComponent],
+  declarations: [AppComponent, WishComponent, TimeComponent, OnboardComponent, SettingsComponent],
   imports: [
     BrowserModule,
     FormsModule,

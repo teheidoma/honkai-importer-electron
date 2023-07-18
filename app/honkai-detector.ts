@@ -7,10 +7,11 @@ export class HonkaiDetector {
   private count = 0;
   private lastCount = 0;
   private startedAt = new Date(0);
+  private timer: NodeJS.Timer | null = null;
 
 
   public start(win: BrowserWindow) {
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.countProccesses().subscribe(count => {
         this.count = count;
         if (this.count > this.lastCount) {
@@ -31,6 +32,13 @@ export class HonkaiDetector {
         this.lastCount = this.count
       })
     }, 5000)
+  }
+
+  public stop(){
+    if (this.timer) {
+      this.timer.unref()
+      clearInterval(this.timer)
+    }
   }
 
   public getCurrent(): Observable<number> {

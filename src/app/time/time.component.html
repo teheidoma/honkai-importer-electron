@@ -1,2 +1,12 @@
-<div id="chartContainer" class="chart-container h-72"></div>
-<p *ngIf="gameStarted">active</p>
+<div id="chartContainer" class="chart-container h-72 rounded-3xl border-2 border-secondary p-2 bg-secondary font-regular"></div>
+
+<table>
+  <tr>
+    <td>Today</td>
+    <td>{{today}}</td>
+  </tr>
+  <tr>
+    <td>Last Week</td>
+    <td>{{week}}</td>
+  </tr>
+</table>

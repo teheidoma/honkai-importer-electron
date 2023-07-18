@@ -105,4 +105,8 @@ export class HonkaiService {
   getBannersByType(type: number): Banner[] {
     return Banners.banners.filter(banner => banner.type === type);
   }
+
+  refreshTime() {
+    return this.electronService.ipcRenderer.send('honkai-status');
+  }
 }
