@@ -11,6 +11,8 @@ export class Assets {
       [1101, 'bronya'],
       [1102, 'seele'],
       [1103, 'serval'],
+      [1104, 'gepard'],
+      [1013, 'herta'],
       [1105, 'natasha'],
       [1106, 'pela'],
       [1107, 'clara'],

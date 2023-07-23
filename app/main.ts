@@ -3,10 +3,11 @@ import {app, BrowserWindow, ipcMain, screen, dialog, Tray, Menu, globalShortcut}
 import * as path from 'path';
 import * as fs from 'fs';
 import axios from "axios";
+import {exec} from 'child_process';
 import * as regedit from 'regedit';
-// import {APP_CONFIG} from "../src/environments/environment";
 import {HonkaiDetector} from "./honkai-detector";
 import {autoUpdater} from "electron-updater"
+import store from "./store";
 
 
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
@@ -52,16 +53,17 @@ function get_file_by_dialog(): string | undefined {
   }
 }
 
-function start_upload(event: Electron.IpcMainEvent, path: string) {
+function start_upload(event: Electron.IpcMainInvokeEvent, path: string) {
   console.log("importing data")
   console.log("path is " + path)
   upload(event, path)
+  console.log('upload done')
 }
 
-function upload(event: Electron.IpcMainEvent, path: string) {
-  path = path + '\\Games\\StarRail_Data\\webCaches\\Cache\\Cache_Data\\data_2'
-  fs.createReadStream(path).pipe(fs.createWriteStream("data.temp", {flags: 'a'}));
-  axios.post(baseUrl + '/parse', {
+function upload(event: Electron.IpcMainInvokeEvent, path: string) {
+  path = path + '\\Games\\StarRail_Data\\webCaches\\2.14.0.0\\Cache\\Cache_Data\\data_2'
+  fs.createReadStream(path).pipe(fs.createWriteStream("data.temp", {flags: 'w'}));
+  return axios.post(baseUrl + '/parse', {
     file: fs.createReadStream(path, {flags: 'r'})
   }, {
     headers: {
@@ -69,11 +71,9 @@ function upload(event: Electron.IpcMainEvent, path: string) {
     }
   }).then((response) => {
     if (response.data.success) {
-      event.reply('upload', {success: true, data: response.data})
-      return true
+      return {success: true, data: response.data}
     } else {
-      event.reply('upload', {success: false, data: response.data})
-      return false
+      return {success: false, data: response.data}
     }
   });
 }
@@ -181,11 +181,26 @@ function createWindow(): BrowserWindow {
   // win.once('ready-to-show', () => {
   //   autoUpdater.checkForUpdatesAndNotify();
   // });
+  ipcMain.on('store:get', (event, key) => {
+    let value = store.get(key);
+    console.log('get', key, value)
+    event.returnValue = value
+  })
+  ipcMain.on('store:set', (event, data) => {
+    console.log('set', data)
+    store.set(data.key, data.value)
+  })
+  ipcMain.on('store:clear', (event, data) => {
+    store.clear()
+  })
   ipcMain.on('autorun', event => {
     autorun()
   })
-  ipcMain.on('upload', (event, args) => {
-    start_upload(event, args)
+  ipcMain.on('issues', event => {
+    exec('start https://github.com/teheidoma/honkai-importer-electron/issues/new/choose');
+  });
+  ipcMain.handle('upload', (event, args) => {
+    return upload(event, args)
   })
   ipcMain.on('onboard', (event, args) => {
     console.log('got event electron', event, args)
@@ -193,17 +208,16 @@ function createWindow(): BrowserWindow {
       case 'registry':
         get_file_by_registry((result) => {
           if (result) {
-            win.webContents.send('onboard', {success: true, path: result, type: 'registry'})
+            event.returnValue = {success: true, path: result, type: 'registry'}
           } else {
-            win.webContents.send('onboard', {success: false, type: 'registry'})
+            event.returnValue = {success: false, type: 'registry'}
           }
         })
         break
       case 'dialog':
         let path = get_file_by_dialog();
-        win.webContents.send('onboard', {success: path != null, path: path, type: 'dialog'})
+        event.returnValue = {success: path != null, path: path, type: 'dialog'}
     }
-
   })
 
   honkaiDetector = new HonkaiDetector();

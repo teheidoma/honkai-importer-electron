@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {faGear} from "@fortawesome/free-solid-svg-icons";
 import {HonkaiService} from "../core/services/honkai.service";
 import {ElectronService} from "../core/services";
+import {StoreService} from "../core/services/store.service";
 
 @Component({
   selector: 'app-settings',
@@ -12,28 +13,34 @@ export class SettingsComponent {
   path: string;
 
   constructor(private honkaiService: HonkaiService,
-              private electionService: ElectronService) {
-    this.path = localStorage.getItem('path')!;
+              private electionService: ElectronService,
+              private storeService: StoreService) {
+    this.path = storeService.getValue('path');
   }
 
   fullReset() {
-    localStorage.clear();
+    // localStorage.clear();
+    this.storeService.clear()
   }
 
 
   pullUpdate() {
-    localStorage.removeItem('pulls');
+    this.storeService.setValue('pulls', null);
     this.honkaiService.getPulls(true, 'settings')
       .subscribe();
   }
 
   upload() {
-    this.honkaiService.uploadFile(localStorage.getItem('path')!)
+    this.honkaiService.uploadFile(this.storeService.getValue('path'))
       .subscribe();
   }
 
   update(value: string) {
-    localStorage.setItem('path', value)
+    this.storeService.setValue('path', value);
+  }
+
+  openIssues() {
+    this.electionService.ipcRenderer.send('issues');
   }
 
   addToAutoRun() {

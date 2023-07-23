@@ -2,13 +2,44 @@
   <router-outlet></router-outlet>
 </ng-container>
 <ng-container *ngIf="!needSoloFocus()">
-  <app-header></app-header>
-  <div class="p-2 grid grid-cols-12">
-    <div class="col-start-1 col-end-3 fixed">
-      <app-navbar></app-navbar>
-    </div>
-    <div class="col-start-3 p-5 pt-28" style="grid-column-end: 13;">
-      <router-outlet></router-outlet>
+  <!--  <app-header></app-header>-->
+  <!--  <div class="p-2 grid grid-cols-12">-->
+  <!--    <div class="col-start-1 col-end-3 fixed">-->
+  <!--      <app-navbar></app-navbar>-->
+  <!--    </div>-->
+  <!--    <div class="col-start-3 p-5 pt-28" style="grid-column-end: 12;">-->
+  <!--      <router-outlet></router-outlet>-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <div class="flex flex-col h-screen">
+    <div class="grid grid-cols-9 h-full w-full">
+      <div class="grid-rows-1 col-start-1 col-end-10">
+        <app-header></app-header>
+      </div>
+      <div class="col-start-2 col-end-3 self-center">
+        <app-navbar></app-navbar>
+      </div>
+      <div class="col-start-3 grow col-end-9 overflow-auto content pt-10">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
+  <!--  <div class="flex flex-col h-full">-->
+  <!--    <app-header></app-header>-->
+  <!--    <div class="bg-red-900 grow w-full flex justify-center gap-20">-->
+  <!--      <app-navbar></app-navbar>-->
+  <!--      <div class="overflow-auto">-->
+  <!--        <router-outlet></router-outlet>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  <div class="flex h-full justify-center items-center gap-24">-->
+  <!--    <div>-->
+  <!--      <app-navbar></app-navbar>-->
+  <!--    </div>-->
+  <!--    <div class="overflow-auto">-->
+  <!--      <router-outlet></router-outlet>-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <!--  </div>-->
+
 </ng-container>

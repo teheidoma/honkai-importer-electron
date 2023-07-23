@@ -1,3 +1,13 @@
-:host {
-  
+.content::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;        /* color of the tracking area */
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: #38393D;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #1D1E22;  /* creates padding around scroll thumb */
 }

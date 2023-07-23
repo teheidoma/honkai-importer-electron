@@ -8,7 +8,7 @@
            (click)="selectBanner(banner.id)"
            *ngFor="let banner of this.banners">{{banner.name}} {{countPullsForBanner(banner)}}</div>
     </div>
-    <div class="w-full flex gap-40 p-2 justify-center items-center">
+    <div class="w-full flex gap-24 p-2 justify-center items-center">
       <ng-container *ngIf="banners.length == 0 || (banners.length > 0 && !selectedBanner )">
         <app-wish-banner-ratio></app-wish-banner-ratio>
       </ng-container>

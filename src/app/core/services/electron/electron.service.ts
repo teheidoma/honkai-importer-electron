@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
-
+import {Injectable} from '@angular/core';
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
-import { ipcRenderer, webFrame } from 'electron';
+import {ipcRenderer, webFrame} from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as regedit from 'regedit';
 import * as axios from 'axios';
 import * as formdata from 'form-data';
+import * as store from 'electron-store';
+import {Observable} from "rxjs";
 
 
 @Injectable({
@@ -20,6 +21,7 @@ export class ElectronService {
   fs!: typeof fs;
   regedit!: typeof regedit;
   formData!: typeof formdata;
+
   constructor() {
     // Conditional imports
     if (this.isElectron) {

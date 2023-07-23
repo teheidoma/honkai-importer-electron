@@ -2,10 +2,10 @@ import {Injectable, NgZone} from '@angular/core';
 import {ElectronService} from './electron/electron.service';
 import {HonkaiService} from './honkai.service';
 import {Router} from '@angular/router';
-import {catchError, Observable, throwError} from 'rxjs';
+import {catchError, Observable, switchMap, throwError, map} from 'rxjs';
 import {OnboardComponent} from '../../onboard/onboard.component';
-import {on} from 'form-data';
 import {OnboardStatus} from '../../shared/status';
+import {StoreService} from "./store.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,53 +14,40 @@ export class OnboardService {
 
   constructor(private electronService: ElectronService,
               private honkaiService: HonkaiService,
-              private router: Router,
+              private storeService: StoreService,
               private ngZone: NgZone) {
   }
 
-  startOnboard(onboardComponent: OnboardComponent): Observable<OnboardStatus> {
-    return new Observable<OnboardStatus>(subscriber => {
-      this.electronService.ipcRenderer.send('onboard', 'registry');
-      this.electronService.ipcRenderer.on('onboard', (event, args) => {
-        console.log(event, args);
-        if (args.type === 'registry') {
-          if (args.success) {
-            localStorage.setItem('path', args.path);
-            this.startUpload(onboardComponent, args.path);
-          } else {
-            this.electronService.ipcRenderer.send('onboard', 'dialog');
-          }
-        } else if (args.type === 'dialog')
-          {if (args.success) {
-            localStorage.setItem('path', args.path);
-            this.startUpload(onboardComponent, args.path);
-          } else {
-            console.log('erorr');
-          }}
-      });
+  startOnboard(onboardComponent: OnboardComponent): Observable<any> {
+    return this.getPath()
+      .pipe(
+        switchMap(path => this.startUpload(onboardComponent, path))
+      );
+  }
+
+  private getPath(): Observable<string> {
+    return new Observable<string>(subscriber => {
+      const args = this.electronService.ipcRenderer.sendSync('onboard', 'registry');
+      console.log(args);
+      if (args.type === 'registry') {
+        if (!args.success) {
+          console.log('getPath error', args);
+          //TODO
+          // this.electronService.ipcRenderer.send('onboard', 'dialog');
+        }
+      } else if (args.type === 'dialog') {
+        if (!args.success) {
+          console.log('getPath error', args);
+        }
+      }
+      this.storeService.setValue('path', args.path);
+      subscriber.next(args.path);
+      subscriber.complete();
     });
   }
 
-  startUpload(onboardComponent: OnboardComponent, args: string) {
-    this.honkaiService.uploadFile(args)
-      .pipe(catchError((err, caught) => {
-        console.log(12333);
-        onboardComponent.title = 'Something has failed';
-        onboardComponent.description = 'please make sure that you lauched a game first and then open pull history';
-        console.log(err);
-        throw err;
-      }))
-      .subscribe(response => {
-        if (response.success) {
-          this.router.navigate(['/']);
-          this.honkaiService.refreshTime();
-        } else {
-          this.ngZone.run(() => {
-            onboardComponent.title = 'Something has failed';
-            onboardComponent.description = 'please make sure that you lauched a game first and then open pull history';
-          });
-        }
-      });
-
+  startUpload(onboardComponent: OnboardComponent, args: string): Observable<any> {
+    console.log('upload');
+    return this.honkaiService.uploadFile(args);
   }
 }

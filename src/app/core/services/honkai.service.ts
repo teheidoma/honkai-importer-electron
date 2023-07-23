@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {ElectronService} from './electron/electron.service';
-import {catchError, EMPTY, Observable, of, tap} from 'rxjs';
+import {catchError, EMPTY, from, Observable, of, tap, map} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {APP_CONFIG} from '../../../environments/environment';
 import {Pull} from '../model/pull';
@@ -8,6 +8,7 @@ import {TimeRange} from '../model/timeRange';
 import {Banner} from '../model/banner';
 import {Banners} from '../../shared/banners';
 import {Assets} from '../../shared/assets';
+import {StoreService} from "./store.service";
 
 
 @Injectable({
@@ -18,6 +19,7 @@ export class HonkaiService {
   public updatedEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private electronService: ElectronService,
+              private storeService: StoreService,
               private httpClient: HttpClient) {
     if (this.electronService.isElectron) {
       this.electronService.ipcRenderer.send('honkai-status');
@@ -33,40 +35,42 @@ export class HonkaiService {
   }
 
   uploadFile(path: string): Observable<any> {
-    return new Observable<string>((subscriber) => {
-      this.electronService.ipcRenderer.send('upload', path);
-      this.electronService.ipcRenderer.on('upload', (response, result) => {
-        subscriber.next(result.data);
-        if (result.success && result.data.success) {
-          localStorage.setItem('secret', result.data.secret);
-          localStorage.setItem('uid', result.data.uid);
-          localStorage.setItem('updated_at', new Date().getTime().toString());
-        } else {
-          subscriber.error(result);
-        }
-        subscriber.complete();
-        this.updatedEvent.next('');
-      });
-    });
+    return from(this.electronService.ipcRenderer.invoke('upload', path))
+      .pipe(tap(e=>{
+        console.log('eee', e)
+      }));
+    // return new Observable<string>((subscriber) => {
+    //   console.log('start upload reslt')
+    //   const result = this.electronService.ipcRenderer.invoke('upload', path);
+    //   console.log('got upload result', result)
+    //   if (result.success && result.data.success) {
+    //
+    //     subscriber.next(result.data);
+    //   } else {
+    //     subscriber.error(result);
+    //   }
+    //   subscriber.complete();
+    //   this.updatedEvent.next('');
+    // });
   }
 
   sendTime(data: any): Observable<any> {
-    return this.httpClient.post(APP_CONFIG.apiUrl + `/time?secret=${localStorage.getItem('secret')}&from=${data.from}&to=${data.to}`, '');
+    return this.httpClient.post(APP_CONFIG.apiUrl + `/time?secret=${this.storeService.getValue('secret')}&from=${data.from}&to=${data.to}`, '');
   }
 
   getPulls(forceUpdate: boolean = false, source: string = ''): Observable<Pull[]> {
     console.log('pulling', source);
-    const cached = localStorage.getItem('pulls');
+    const cached = this.storeService.getValue('pulls');
     if (!forceUpdate && cached && cached !== '[]') {
-      return of(JSON.parse(localStorage.getItem('pulls')!));
+      return of(JSON.parse(this.storeService.getValue('pulls')!));
     }
-    const secret = localStorage.getItem('secret');
+    const secret = this.storeService.getValue('secret');
     console.log(secret + 'ds');
     if (secret != null) {
       return this.httpClient.get<Pull[]>(APP_CONFIG.apiUrl + '/pulls/all?secret=' + secret)
         .pipe(
           tap(pulls => {
-            localStorage.setItem('pulls', JSON.stringify(pulls));
+            this.storeService.setValue('pulls', JSON.stringify(pulls));
           }),
           catchError((err, o) => {
             console.log(err);
@@ -78,10 +82,10 @@ export class HonkaiService {
   }
 
   getTime(): Observable<TimeRange[]> {
-    const secret = localStorage.getItem('secret');
+    const secret = this.storeService.getValue('secret');
     return this.httpClient.get<TimeRange[]>(APP_CONFIG.apiUrl + '/time?secret=' + secret)
       .pipe(tap(ranges => {
-        localStorage.setItem('ranges', JSON.stringify(ranges));
+        this.storeService.setValue('ranges', JSON.stringify(ranges));
       }));
   }
 
@@ -99,7 +103,7 @@ export class HonkaiService {
   }
 
   fetchBannerIcon(pull: Pull) {
-    return 'http://teheidoma.com:9000/assets/banner/'+pull.gacha_id+'.webp';
+    return 'http://teheidoma.com:9000/assets/banner/' + pull.gacha_id + '.webp';
   }
 
   getBannersByType(type: number): Banner[] {
