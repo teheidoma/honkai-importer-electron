@@ -19,8 +19,9 @@ export class SettingsComponent {
   }
 
   fullReset() {
-    // localStorage.clear();
-    this.storeService.clear()
+    this.honkaiService.fullClear().subscribe();
+    this.storeService.clear();
+    window.location.reload();
   }
 
 

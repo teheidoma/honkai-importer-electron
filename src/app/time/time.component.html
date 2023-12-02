@@ -1,12 +1,9 @@
-<div id="chartContainer" class="chart-container h-72 rounded-3xl border-2 border-secondary p-2 bg-secondary font-regular"></div>
+<div class="bg-white flex flex-col gap-1">
 
-<table>
-  <tr>
-    <td>Today</td>
-    <td>{{today}}</td>
-  </tr>
-  <tr>
-    <td>Last Week</td>
-    <td>{{week}}</td>
-  </tr>
-</table>
+  <div *ngFor="let row of rows" class="flex gap-1">
+    <app-time-cell *ngFor="let column of row" [timeCell]="column">
+
+    </app-time-cell>
+    <div class="square bg-red-900" ></div>
+  </div>
+</div>

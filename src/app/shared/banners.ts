@@ -27,6 +27,14 @@ export class Banners {
       rareIds: [1002, 1009, 1103]
     },
     {
+      id: 2007,
+      name: 'A lost soul',
+      typeName: 'Character event',
+      type: 11,
+      legendaryId: 'blade',
+      rareIds: [1008, 1206, 1105]
+    },
+    {
       id: 1001,
       name: null,
       typeName: 'Stellar Warp',

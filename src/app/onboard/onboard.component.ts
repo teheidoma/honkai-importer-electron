@@ -3,7 +3,8 @@ import {OnboardService} from '../core/services/onboard.service';
 import {StoreService} from "../core/services/store.service";
 import {Router} from "@angular/router";
 import {HonkaiService} from "../core/services/honkai.service";
-import {catchError, of} from "rxjs";
+import {catchError, interval, map, Observable, of, switchMap, takeUntil, takeWhile, tap, timer} from "rxjs";
+import {PullStatus} from "../core/model/pullStatus";
 
 @Component({
   selector: 'app-onboard',
@@ -31,34 +32,72 @@ export class OnboardComponent implements OnInit {
       this.onboardService.startOnboard(this)
         .pipe(
           catchError(err => {
-              console.log(err);
+              console.log('error onb', err);
               return of({response: false, error: err});
             }
-          )
+          ),
+          map(value => this.saveInfo(value)),
+          tap(v => console.log('saved')),
+          switchMap(v => this.checkPulls()),
+          switchMap(v => this.honkaiService.getPulls())
         )
-        .subscribe(response => {
-          this.ngZone.run(() => {
-            console.log(response)
-            if (response.success) {
-              this.router.navigate(['/']);
-              this.honkaiService.refreshTime();
-              this.storeService.setValue('secret', response.data.secret);
-              this.storeService.setValue('uid', response.data.uid);
-              this.storeService.setValue('updated_at', new Date().getTime().toString());
-            } else {
-              this.title = 'Something has failed';
-              this.description = 'please make sure that you launched a game first and then open pull history';
-              console.log("errrrrror ", response.error)
-            }
-          })
+        .subscribe(r => {
+          this.router.navigate(['/']);
         });
     }, 2000);
   }
 
   tryAgain() {
-    this.storeService.clear()
+    this.storeService.clear();
     // localStorage.clear();
     this.ngOnInit();
-    // this.onboardService.startUpload(this, localStorage.getItem('path')!)
+
+  }
+
+  private saveInfo(response: any) {
+    console.log('saving info', response);
+    if (response.success) {
+      this.honkaiService.refreshTime();
+      this.storeService.setValue('secret', response.data.secret);
+      this.storeService.setValue('uid', response.data.uid);
+      this.storeService.setValue('updated_at', new Date().getTime().toString());
+    } else {
+      this.title = 'Something has failed';
+      this.description = 'please make sure that you launched a game first and then open pull history';
+      console.log("errrrrror ", response.error);
+    }
+    return response;
+  }
+
+  private checkPulls(): Observable<any> {
+    console.log('chekc');
+
+    let checkPullsLoop = (done: () => void) => {
+      setTimeout(() => {
+        this.honkaiService.getPullsStatus().subscribe(status => {
+          console.log(status)
+          if (status.banners.filter(b => b.done).length < 4) {
+            this.ngZone.run(() => {
+              this.title = 'importing your pulls';
+              const currentBanner = status.banners
+                .find(banner => !banner.done);
+              if (currentBanner) {
+                this.description = currentBanner.gachaType + ' ' + currentBanner.count;
+              }
+            });
+            checkPullsLoop(done);
+          } else {
+            done();
+          }
+        });
+      }, 300);
+    };
+    return new Observable(subscriber => {
+      checkPullsLoop(() => {
+        console.log('pulling', 'done');
+        subscriber.next();
+        subscriber.complete();
+      });
+    });
   }
 }

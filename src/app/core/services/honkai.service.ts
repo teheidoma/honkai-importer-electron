@@ -9,6 +9,7 @@ import {Banner} from '../model/banner';
 import {Banners} from '../../shared/banners';
 import {Assets} from '../../shared/assets';
 import {StoreService} from "./store.service";
+import {PullStatus} from "../model/pullStatus";
 
 
 @Injectable({
@@ -36,22 +37,9 @@ export class HonkaiService {
 
   uploadFile(path: string): Observable<any> {
     return from(this.electronService.ipcRenderer.invoke('upload', path))
-      .pipe(tap(e=>{
-        console.log('eee', e)
+      .pipe(tap(e => {
+        console.log('eee', e);
       }));
-    // return new Observable<string>((subscriber) => {
-    //   console.log('start upload reslt')
-    //   const result = this.electronService.ipcRenderer.invoke('upload', path);
-    //   console.log('got upload result', result)
-    //   if (result.success && result.data.success) {
-    //
-    //     subscriber.next(result.data);
-    //   } else {
-    //     subscriber.error(result);
-    //   }
-    //   subscriber.complete();
-    //   this.updatedEvent.next('');
-    // });
   }
 
   sendTime(data: any): Observable<any> {
@@ -112,5 +100,15 @@ export class HonkaiService {
 
   refreshTime() {
     return this.electronService.ipcRenderer.send('honkai-status');
+  }
+
+  getPullsStatus(): Observable<PullStatus> {
+    const secret = this.storeService.getValue('secret');
+    return this.httpClient.get<PullStatus>(APP_CONFIG.apiUrl + '/pulls/status?secret=' + secret);
+  }
+
+  fullClear(): Observable<any> {
+    const secret = this.storeService.getValue('secret');
+    return this.httpClient.post(APP_CONFIG.apiUrl + '/pulls/reset?secret=' + secret, '');
   }
 }

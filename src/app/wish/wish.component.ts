@@ -3,10 +3,8 @@ import {Pull} from '../core/model/pull';
 import {ActivatedRoute} from '@angular/router';
 import {HonkaiService} from '../core/services/honkai.service';
 import {Banner} from '../core/model/banner';
-import bar = anychart.bar;
 import {Banners} from '../shared/banners';
 import {constants} from 'os';
-import Pie = anychart.charts.Pie;
 import {groupBy} from 'lodash';
 
 
@@ -15,21 +13,17 @@ import {groupBy} from 'lodash';
   templateUrl: './wish.component.html',
   styleUrls: ['./wish.component.css']
 })
-export class WishComponent implements OnDestroy {
+export class WishComponent {
   pulls: Pull[] = [];
   banners: Banner[] = [];
   selectedBanner: Banner | undefined;
-  @ViewChild('chartContainer') chartContainer: ElementRef | undefined;
-  chart: Pie | undefined;
 
   constructor(private activatedRoute: ActivatedRoute,
               private honkaiService: HonkaiService,
               private changeDetectionRef: ChangeDetectorRef) {
   }
 
-  ngOnDestroy(): void {
-    this.chart?.data([]);
-  }
+
 
   ngOnInit(): void {
     this.honkaiService.getPulls()
@@ -69,7 +63,7 @@ export class WishComponent implements OnDestroy {
     if (this.selectedBanner) {
       return this.selectedBanner.name;
     } else {
-      return 'total';
+      return 'Total';
     }
   }
 

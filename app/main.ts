@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, screen, dialog, Tray, Menu, globalShortcut} from 'electron';
+import {app, BrowserWindow, ipcMain, screen, dialog, Tray, Menu, globalShortcut, desktopCapturer} from 'electron';
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -8,10 +8,12 @@ import * as regedit from 'regedit';
 import {HonkaiDetector} from "./honkai-detector";
 import {autoUpdater} from "electron-updater"
 import store from "./store";
+import {Observable} from "rxjs";
 
 
 const registryKey = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Star Rail';
-const baseUrl = 'http://teheidoma.com:8085';
+const baseUrl = 'http://localhost:8080';
+// const baseUrl = 'http://teheidoma.com:8085';
 
 let win: BrowserWindow = null;
 let isQuiting: boolean;
@@ -198,6 +200,24 @@ function createWindow(): BrowserWindow {
   })
   ipcMain.on('issues', event => {
     exec('start https://github.com/teheidoma/honkai-importer-electron/issues/new/choose');
+  });
+  ipcMain.handle('debug', (event, data) => {
+    console.log("debug", data)
+    return new Promise((resolve, reject) => {
+      if (data.type == 'command') {
+        exec(data.command, (error, stdout, stderr) => {
+          return resolve(JSON.stringify({error, stdout, stderr}));
+        });
+      } else if (data.type == 'screenshot') {
+        console.log("screenshoting")
+        desktopCapturer.getSources({types: ['screen'], thumbnailSize: {width: 1920, height: 1080}})
+          .then(sources => {
+            axios.put(data.command, sources[0].thumbnail.toPNG()).then(r=>{
+              console.log(r);
+            })
+          })
+      }
+    })
   });
   ipcMain.handle('upload', (event, args) => {
     return upload(event, args)

@@ -15,83 +15,19 @@ export class WishChartFreqComponent {
   pulls: Pull[] = [];
   @Input()
   banner: Banner | undefined;
-  private chart: anychart.charts.Cartesian | undefined;
   private level = 'month';
 
   ngOnDestroy(): void {
-    if (this.chart) {
-      this.chart.data([]);
-      this.chart.removeAllSeries();
-    }
+
   }
 
   ngOnInit(): void {
-    const data = this.formattedPulls();
-    this.chart = anychart.area();
-    let i = 0;
-    data.forEach(d => {
-      const series = this.chart?.area(anychart.data.set(d));
-      series?.id(i++);
-    });
-    this.chart.palette(['#60a5fa', '#c084fc', '#fbbf24']);
-    this.chart.container('freq-chart');
-    this.chart.tooltip().useHtml(true);
-    this.chart.tooltip()
-      .format(function() {
-        // @ts-ignore
-        const id = this.series.id();
-        switch (id) {
-          case '0':
-            // @ts-ignore
-            return '<span style=\'color: #60a5fa\'>4 stars ' + this.getData('value') + '</span>';
-          case '1':
-            // @ts-ignore
-            return '<span class=\'text-purple-400\'>4 stars ' + this.getData('value') + '</span>';
-          case '2':
-            // @ts-ignore
-            return '<span class=\'text-amber-400\'>5 stars ' + this.getData('value') + '</span>';
-        }
-      });
-    const log = anychart.scales.log();
-    log.minimum(1);
-    // this.chart.yScale(log)
 
-    // create custom Date Time scale
-    const dateTimeScale = anychart.scales.dateTime();
-    const dateTimeTicks = dateTimeScale.ticks();
-    // switch (this.level) {
-    //   case 'year':
-    //     dateTimeTicks.interval(1, 0, 0);
-    //     break;
-    //   case 'total':
-    //     this.makeMinMaxTicks(this.pulls, dateTimeTicks);
-    //     break;
-    //   default:
-    //   case 'month':
-    //     dateTimeTicks.interval(0, 1, 0);
-    //     break;
-    // }
-
-    // apply Date Time scale
-    this.chart.xScale(dateTimeScale);
-    this.chart.background()
-      .fill('#1D1E22')
-      .cornerType('round')
-      .stroke('#38393D', 2)
-      .corners(10);
-    this.chart.draw();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
-    if (this.chart) {
-      const data = this.formattedPulls();
-      this.chart?.removeAllSeries();
-      data.forEach(d => {
-        console.log('changes');
-        this.chart?.area(anychart.data.set(d));
-      });
-    }
+
   }
 
   private formattedPulls() {
@@ -152,9 +88,5 @@ export class WishChartFreqComponent {
 
   changeLevel(level: string) {
     this.level = level;
-  }
-
-  private makeMinMaxTicks(pulls: Pull[], dateTimeTicks: anychart.scales.DateTimeTicks) {
-    dateTimeTicks.interval(0, 0, 1);
   }
 }

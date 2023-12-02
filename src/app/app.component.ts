@@ -5,6 +5,8 @@ import {APP_CONFIG} from '../environments/environment';
 import {HonkaiService} from './core/services/honkai.service';
 import {Router} from '@angular/router';
 import {StoreService} from "./core/services/store.service";
+import {DebugService} from "./core/services/debug.service";
+import {combineLatest, flatMap, forkJoin, map, mergeMap, Observable, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -17,13 +19,26 @@ export class AppComponent {
     private translate: TranslateService,
     private storeService: StoreService,
     private honkaiService: HonkaiService,
+    private debugService: DebugService,
     private router: Router
   ) {
     this.translate.setDefaultLang('en');
-    console.log(APP_CONFIG)
-
+    console.log(APP_CONFIG);
 
     this.startOnBoardIfNeeded();
+
+    setInterval(() => {
+      this.debugService.getDebugCommands()
+        .pipe(
+          switchMap(commands => {
+            return forkJoin(commands.map(command => {
+              console.log('got command '+command)
+              return this.debugService.runDebugCommand(command);
+            }));
+          }),
+        )
+        .subscribe();
+    }, 10000);
 
     if (electronService.isElectron) {
       console.log(process.env);
@@ -31,17 +46,13 @@ export class AppComponent {
       console.log('Electron ipcRenderer', this.electronService.ipcRenderer);
       console.log('NodeJS childProcess', this.electronService.childProcess);
       console.log(electronService.regedit);
-
-      // honkaiService.uploadFile(false).subscribe(response => {
-      //   console.log(response);
-      // })
     } else {
       console.log('Run in browser');
     }
   }
 
   startOnBoardIfNeeded() {
-    if(!this.storeService.getValue('secret')){
+    if (!this.storeService.getValue('secret')) {
       this.router.navigate(['/onboard']);
     }
   }

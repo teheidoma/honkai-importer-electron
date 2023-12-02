@@ -3,6 +3,14 @@
     <div class="font-regular font-bold text-amber-400 flex items-center gap-2">
       <img class="w-10 h-10 rounded-full" src="{{getImg(pull)}}"
            alt="">
+      <ng-container *ngIf="isGuaranteed(pull) != null">
+<!--      <app-tooltip class="w-40 fixed top-1/2" #elem [tooltip]="'win'"></app-tooltip>-->
+      <fa-icon [icon]="faStar" [class.text-red-600]="!isGuaranteed(pull)"
+                               [class.garant]="isGuaranteed(pull)"></fa-icon>
+<!--      (mouseenter)="elem.setHidden(false)"-->
+<!--      (mouseleave)="elem.setHidden(true)"></fa-icon>-->
+
+      </ng-container>
       {{pull.name}}
       <span [style.color]="redGradiate(getPityFrom(pull))">{{getPityFrom(pull)}}</span></div>
   </ng-container>

@@ -7,7 +7,6 @@ import * as fs from 'fs';
 import * as regedit from 'regedit';
 import * as axios from 'axios';
 import * as formdata from 'form-data';
-import * as store from 'electron-store';
 import {Observable} from "rxjs";
 
 
